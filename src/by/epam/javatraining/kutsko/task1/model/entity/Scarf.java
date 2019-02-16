@@ -1,6 +1,8 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
 import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
+import by.epam.javatraining.kutsko.task1.model.entity.Item.Color;
+import by.epam.javatraining.kutsko.task1.model.entity.Item.Material;
 
 public class Scarf extends Accessory {
 
@@ -15,6 +17,10 @@ public class Scarf extends Accessory {
 		type = Type.OTHER;
 	}
 
+	public Scarf(Object... parameters) {
+		this((Double) parameters[0], (Material) parameters[1], (Boolean) parameters[2], (Color) parameters[3], (Season) parameters[4], (Type) parameters[5]);
+	}
+	
 	public Scarf(double price, Material material, boolean selected, Color color, Season season, Type type) {
 		super(price, material, selected, color, season);
 		this.type = type;
@@ -37,8 +43,30 @@ public class Scarf extends Accessory {
 		return type;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Scarf other = (Scarf) obj;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+
 	@Override 
 	public String toString() {
-		return ("Scarf\ntype: " + type.toString().toLowerCase() + super.toString());
+		return ("Scarf\n" + super.toString()) + ", type: " + type.toString().toLowerCase() ;
 	}
 }

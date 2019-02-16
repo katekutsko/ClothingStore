@@ -1,6 +1,8 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
 import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
+import by.epam.javatraining.kutsko.task1.model.entity.Item.Color;
+import by.epam.javatraining.kutsko.task1.model.entity.Item.Material;
 
 public class Jumper extends Clothing {
 
@@ -15,6 +17,10 @@ public class Jumper extends Clothing {
 		type = Type.OTHER;
 	}
 
+	public Jumper(Object... parameters) {
+		this((Double) parameters[0], (Material) parameters[1], (Boolean) parameters[2], (Color) parameters[3], (Size) parameters[4], (Type) parameters[5]);
+	}
+	
 	public Jumper(double price, Material material, boolean selected, Color color, Size size, Type type) {
 		super(price, material, selected, color, size);
 		this.type = type;
@@ -38,19 +44,6 @@ public class Jumper extends Clothing {
 	}
 
 	@Override
-	public String toString() {
-		return "Jumper\ntype: " + type.toString().toLowerCase() + super.toString();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -63,5 +56,17 @@ public class Jumper extends Clothing {
 			return false;
 		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
 	
+	@Override
+	public String toString() {
+		return "Jumper\ntype: " + type.toString().toLowerCase() + super.toString();
+	}
 }

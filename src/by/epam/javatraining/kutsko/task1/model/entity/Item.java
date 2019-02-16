@@ -1,7 +1,7 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
-import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
+import java.util.Comparator;
+import by.epam.javatraining.kutsko.task1.exception.*;
 
 /**
  * This class is designed as an abstraction for items of a clothing store.
@@ -9,7 +9,7 @@ import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public abstract class Item {
+public class Item implements Comparable<Item> {
 	
 	private double price;
 	
@@ -47,7 +47,7 @@ public abstract class Item {
 	
 	public Item(Item item) {
 		this.price = item.getPrice();
-		this.material = item.getMaterial();///////////////////////////////////////////////////////////////////////////
+		this.material = item.getMaterial();
 		this.selected = item.isSelected();
 		this.color = item.getColor();
 	}
@@ -96,12 +96,6 @@ public abstract class Item {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return ", price: " + price + ", material: " + material.toString().toLowerCase() 
-				+ ", color: " + color.toString().toLowerCase()+ ", selected: " + selected;
-	}
-
 	@Override 
 	public boolean equals(Object otherItem) {
 		if (this == otherItem) {
@@ -137,5 +131,15 @@ public abstract class Item {
 		result += (color == null ? 0 : color.hashCode());
 		return result;
 	}
+	 
+	public int compareTo(Item secondItem) {
+		return Double.compare(getPrice(), secondItem.getPrice());
+	}
 	
+	@Override
+	public String toString() {
+		return ", price: " + price + ", material: " + material.toString().toLowerCase() 
+				+ ", color: " + color.toString().toLowerCase()+ ", selected: " + selected;
+	}
+
 }

@@ -2,16 +2,16 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import by.epam.javatraining.kutsko.task1.exception.*;
 
-public abstract class Shoes extends Item {
+public class Shoes extends Item {
 
-	private short size;
+	private int size;
 	
 	public Shoes() {
 		super();
 		size = 37;
 	}
 
-	public Shoes(double price, Material material, boolean selected, Color color, short size) {
+	public Shoes(double price, Material material, boolean selected, Color color, int size) {
 		super(price, material, selected, color);
 		this.size = size;
 	}
@@ -21,7 +21,7 @@ public abstract class Shoes extends Item {
 		size = item.size;
 	}
 
-	public short getSize() {
+	public int getSize() {
 		return size;
 	}
 	
@@ -31,8 +31,32 @@ public abstract class Shoes extends Item {
 		}
 	}
 
+	@Override 
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (this.getClass() != obj.getClass()) {
+			return false;
+		}
+		Shoes other = (Shoes) obj;
+		if (size != other.size) {
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode() + prime * size;
+		return result;
+	}
 	@Override
 	public String toString() {
-		return ", size: " + size + super.toString();
+		return "size: " + size + super.toString();
 	}
 }

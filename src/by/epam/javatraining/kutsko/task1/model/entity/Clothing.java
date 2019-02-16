@@ -8,7 +8,7 @@ import by.epam.javatraining.kutsko.task1.exception.*;
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public abstract class Clothing extends Item {
+public class Clothing extends Item {
 	
 	private Size size;
 	
@@ -54,10 +54,6 @@ public abstract class Clothing extends Item {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return (super.toString() + ", size: " + size);
-	}
 
 	@Override
 	public int hashCode() {
@@ -79,5 +75,10 @@ public abstract class Clothing extends Item {
 		if (size != other.size)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return (super.toString() + ", size: " + size);
 	}
 }

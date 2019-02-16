@@ -11,7 +11,11 @@ public class HighHeels extends Shoes {
 		heelHeight = 0;
 	}
 
-	public HighHeels(double price, Material material, boolean selected, Color color, short size, float heelHeight) {
+	public HighHeels(Object... parameters) {
+		this((Double) parameters[0], (Material) parameters[1], (Boolean) parameters[2], (Color) parameters[3], (Integer) parameters[4], (Float) parameters[5]);
+	}
+	
+	public HighHeels(double price, Material material, boolean selected, Color color, int size, float heelHeight) {
 		super(price, material, selected, color, size);
 		this.heelHeight = heelHeight;
 	}
@@ -33,10 +37,6 @@ public class HighHeels extends Shoes {
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "HighHeels\nheel height: " + heelHeight + super.toString();
-	}
 
 	@Override
 	public int hashCode() {
@@ -59,5 +59,9 @@ public class HighHeels extends Shoes {
 			return false;
 		return true;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "HighHeels\n" + super.toString() + ", heel height: " + heelHeight;
+	}
 }

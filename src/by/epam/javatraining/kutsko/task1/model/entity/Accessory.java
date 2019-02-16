@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-public abstract class Accessory extends Item {
+public class Accessory extends Item {
 
 	private Season season;
 	
@@ -21,11 +21,6 @@ public abstract class Accessory extends Item {
 	public Accessory(Accessory item) {
 		super(item);
 		this.season = item.season;
-	}
-
-	@Override 
-	public String toString() {
-		return ", season: " + season.toString().toLowerCase() + super.toString();
 	}
 
 	@Override
@@ -49,4 +44,10 @@ public abstract class Accessory extends Item {
 			return false;
 		return true;
 	}
+	
+	@Override 
+	public String toString() {
+		return ", season: " + season.toString().toLowerCase() + super.toString();
+	}
+
 }
