@@ -1,5 +1,7 @@
 package by.epam.javatraining.kutsko.task1.controller;
 
+import by.epam.javatraining.kutsko.task1.model.comparator.CategoryComparator;
+import by.epam.javatraining.kutsko.task1.model.comparator.ColorComparator;
 import by.epam.javatraining.kutsko.task1.model.container.ClothingStore;
 import by.epam.javatraining.kutsko.task1.model.creator.*;
 import by.epam.javatraining.kutsko.task1.model.entity.*;
@@ -8,19 +10,21 @@ import by.epam.javatraining.kutsko.task1.model.logic.Sorter;
 import by.epam.javatraining.kutsko.task1.util.parser.Parser;
 import by.epam.javatraining.kutsko.task1.util.reader.DataReader;
 import by.epam.javatraining.kutsko.task1.util.validator.Validator;
-
+import by.epam.javatraining.kutsko.task1.view.*;
+import by.epam.javatraining.kutsko.task1.view.creator.ConsolePrinterCreator;
+import by.epam.javatraining.kutsko.task1.view.creator.FilePrinterCreator;
+import by.epam.javatraining.kutsko.task1.view.creator.PrinterFactory;
+import by.epam.javatraining.kutsko.task1.exception.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-
-import by.epam.javatraining.kutsko.task1.exception.*;
 
 public class Controller {
 
 	public static void main(String[] args) {
 		
-		ClothingStore store = new ClothingStore();
 		List<String> rawData = new ArrayList<String>();
 		
 		try {
@@ -28,41 +32,30 @@ public class Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		for (String line : rawData) {
+		String[] temporaryCopy = new String[rawData.size()];
+		rawData.toArray(temporaryCopy);
+		for (String line : temporaryCopy) {
 			if (!Validator.validateQuantity(line)) {
 				rawData.remove(line);
 			}
 		}
 		
-		for (String line : rawData) {
-			String[] splittedData = Parser.splitLine(line);
-			if (Validator.validateData(splittedData)) {
-				Object[] parsedData = Parser.parseData(splittedData);
-				int itemId = (Integer) parsedData[6];
-				parsedData = Arrays.copyOfRange(parsedData, 0, 6);
-				AbstractCreator creator;
-				
-				switch(itemId) {
-					case 1: {
-						creator = new HighHeelsCreator();
-					} break;
-					case 2: {
-						creator = new ScarfCreator();
-					} break;
-					case 3:  {
-						creator = new JumperCreator();
-					} break;
-					default: {
-						creator = null;
-					}
-				}
-				
-				if (creator != null) {
-					Item item = Creator.getItem(creator, parsedData);
-					store.addProduct(item);
-				}
-			}
+		ItemCreator itemCreator = ItemCreator.getInstance();
+		ClothingStore store = (ClothingStore) itemCreator.fillWarehouse(rawData);
+		PrinterFactory creator = PrinterFactory.getInstance();
+		Printer filePrinter = creator.getPrinter(new FilePrinterCreator());
+		Printer consolePrinter = creator.getPrinter(new ConsolePrinterCreator());
+		try {
+			consolePrinter.print(store);
+			filePrinter.print(store);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Sorter.sort(store, new CategoryComparator());
+		try {
+			consolePrinter.print(store);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -9,7 +9,7 @@ public class Jumper extends Clothing {
 	private Type type;
 	
 	public enum Type {
-		SWEATER, PULLOVER, SWEATSHOT, TUNIC, OTHER
+		SWEATER, PULLOVER, SWEATSHOT, TUNIC, HOODY, OTHER
 	}
 	
 	public Jumper() {

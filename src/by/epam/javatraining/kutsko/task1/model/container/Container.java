@@ -3,38 +3,42 @@ package by.epam.javatraining.kutsko.task1.model.container;
 import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
 import by.epam.javatraining.kutsko.task1.exception.NoSuchItemException;
 import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
-import by.epam.javatraining.kutsko.task1.exception.ContainerEmptyException;
+
+import java.util.Arrays;
 import by.epam.javatraining.kutsko.task1.exception.WarehouseFullException;
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
 
 public class Container {
-	
-	private int currentAmountOfProducts = 0;
-	
+
+	public static final int DEFAULT_CAPACITY = 0;
+
+	private int currentAmountOfProducts;
+
 	private Item[] itemSet;
-	
+
 	private int capacity;
-	
-	private boolean sorted = false;
-	
+
+	private boolean sorted;
+
 	public Container() {
-		capacity = 10;
-		itemSet = new Item[capacity];
+		itemSet = new Item[DEFAULT_CAPACITY];
 	}
-	
+
 	public Container(int capacity) {
 		this.capacity = capacity;
 		itemSet = new Item[capacity];
 	}
-	
+
 	public void setCapacity(int capacity) {
-		if (capacity > 0) {
+		if (capacity > this.capacity) {
 			this.capacity = capacity;
-		} else {
-			this.capacity = 10;
+			itemSet = Arrays.copyOf(itemSet, capacity);
+		} else if (capacity >= currentAmountOfProducts) {
+			this.capacity = capacity;
+			itemSet = Arrays.copyOf(itemSet, capacity);
 		}
 	}
-	
+
 	public boolean isSorted() {
 		return sorted;
 	}
@@ -46,66 +50,57 @@ public class Container {
 	public int getCapacity() {
 		return capacity;
 	}
+
+	public Item getItem(int index) throws NoSuchItemException {
+		if (index >= 0 && index < capacity) {
+			return itemSet[index];
+		} else {
+			throw new NoSuchItemException("There is no item with such index");
+		}
+	}
 	
 	public Item[] getItemSet() {
 		if (itemSet == null) {
-			itemSet = new Item[10];
+			itemSet = new Item[DEFAULT_CAPACITY];
 		}
 		return itemSet;
 	}
-	
-	/* Без исключений непонятно, почему элемент не добавился */
-	public boolean addProduct(Item item) /* throws WarehouseFullException */ {
-		if (currentAmountOfProducts < (capacity - 1)) {
+
+	protected void addProduct(Item item) {
+		if (currentAmountOfProducts < capacity) {
 			if (item != null) {
 				itemSet[currentAmountOfProducts] = item;
-			currentAmountOfProducts++;
-			return true;
+				currentAmountOfProducts++;
 			} else {
-				/* throw new NonexistentArgumentException("Item is unidentified"); */
+				throw new NullPointerException("Item is unidentified");
+			}
+		} else {
+			setCapacity(capacity+1);
+			itemSet[currentAmountOfProducts] = item;
+		}
+	}
+
+	public boolean removeProduct(int index) throws NoSuchItemException {
+		if (index >= 0 && index < capacity) {
+			if (index >= 0 && index < currentAmountOfProducts) {
+				if (index != currentAmountOfProducts - 1) {
+					for (int i = index; i < currentAmountOfProducts - 1; i++) {
+						itemSet[i] = itemSet[i + 1];
+					}
+					return true;
+				} else {
+					itemSet[index] = null;
+					return true;
+				}
+			} else {
 				return false;
 			}
 		} else {
-			return false;
+			throw new NoSuchItemException("There is no item with such index");
 		}
 	}
-	
-	/* То же, что и в предыдущем */
-	public boolean removeProduct(Item item) /* throws NoSuchItemException, NonexistentArgumentException */ {
-		int counter = 0;
-		if (item != null) {
-			/* throw new NonexistentArgumentException("Item is unidentified"); */
-			for (Item i : itemSet) {
-			if (i == item) {
-				break;
-			} else {
-				counter++;
-			}
-		}
-		if (counter == currentAmountOfProducts) {
-			/* throw new NoSuchItemException("There is no such item in the warehouse"); */
-			return false;
-		} else {
-			for (int i = counter; i < currentAmountOfProducts - 1; i++)
-				itemSet[i] = itemSet[i + 1];
-		}
-		currentAmountOfProducts--;
-		return true;
-		}
-		return false;
-	}
-	
+
 	public int getCurrentAmountOfProducts() {
 		return currentAmountOfProducts;
-	}
-	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder("Contents of warehouse:\n");
-		for (int i = 0; i < currentAmountOfProducts; i++) {
-			builder.append(itemSet[i].toString());
-			builder.append("\n");
-		}
-		return builder.toString();
 	}
 }

@@ -1,0 +1,17 @@
+Contents of clothing store warehouse:
+HighHeels
+size: 39, price: 10.99, material: leather, color: brown, selected: false, heel height: 12.0
+Scarf
+season: any, price: 24.19, material: cotton, color: pink, selected: false, type: chunky
+HighHeels
+size: 39, price: 19.99, material: leather, color: black, selected: false, heel height: 9.0
+HighHeels
+size: 36, price: 15.99, material: leather, color: multi, selected: false, heel height: 15.0
+Jumper
+type: sweater, price: 20.0, material: wool, color: red, selected: false, size: XS
+Scarf
+season: any, price: 14.0, material: silk, color: grey, selected: false, type: thin
+Scarf
+season: winter, price: 18.69, material: cotton, color: black, selected: false, type: loop
+Jumper
+type: hoody, price: 13.99, material: poliester, color: white, selected: false, size: M

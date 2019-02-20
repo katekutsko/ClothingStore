@@ -47,7 +47,7 @@ public class Accessory extends Item {
 	
 	@Override 
 	public String toString() {
-		return ", season: " + season.toString().toLowerCase() + super.toString();
+		return "season: " + season.toString().toLowerCase() + super.toString();
 	}
 
 }

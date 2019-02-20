@@ -1,8 +1,8 @@
 package by.epam.javatraining.kutsko.task1.model.logic;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.function.Predicate;
+import java.util.Comparator;
 
 import by.epam.javatraining.kutsko.task1.model.container.Container;
 import by.epam.javatraining.kutsko.task1.model.entity.Item;

@@ -8,41 +8,49 @@ import by.epam.javatraining.kutsko.task1.model.entity.Item;
 
 public class ShoppingBasket extends Container {
 	
-	public final static int MAX_CAPACITY = 5;
+	public final static int DEFAULT_CAPACITY = 5;
 	
 	public ShoppingBasket() {
-		super(MAX_CAPACITY);
+		super(DEFAULT_CAPACITY);
 	}
 	
 	public ShoppingBasket(int capacity) {
 		super(capacity);
 	}
 	
-	public void addProductToBasket(Item item) 
-			throws WarehouseFullException, NonexistentArgumentException, InvalidArgumentException {
-		if (!item.isSelected()) {
-		/* try { */
-			super.addProduct(item);
-			item.setSelected(true);
-		/* } catch (WarehouseFullException | NonexistentArgumentException e) {
-			throw e;
-			}
+	//нужно ли все-таки здесь выбрасывать исключение?
+	public boolean addProductToBasket(Item item) {
+		if ((item != null) && (!item.isSelected())) {
+				super.addProduct(item);
+				item.setSelected(true);
+				return true;
 		} else {
-			throw new InvalidArgumentException("The item has already been selected");*/
+			return false;
 		} 
 	}
 	
-	public void removeProductFromBasket(Item item) 
-			/* throws NonexistentArgumentException, NoSuchItemException, InvalidArgumentException */ {
-		if (item.isSelected()) {
-		/* try { */
-			super.removeProduct(item);
-			item.setSelected(false);
-		/* } catch (NoSuchItemException | NonexistentArgumentException e) {
-			throw e;
-		}
+	public void removeProductFromBasket(int index) 
+			 throws NonexistentArgumentException, NoSuchItemException, InvalidArgumentException {
+		super.removeProduct(index);
+		super.getItemSet()[index].setSelected(false);
+	} 
+	
+	public Item[] getItemSet() {
+		return super.getItemSet();
+	}
+	
+	@Override
+	public String toString() {
+		Item[] thisItemSet = super.getItemSet();
+		if (thisItemSet != null) {
+			StringBuilder builder = new StringBuilder("Contents of shopping basket:\n");
+			for (int i = 0; i < super.getCurrentAmountOfProducts(); i++) {
+				builder.append(thisItemSet[i].toString());
+				builder.append("\n");
+			}
+			return builder.toString();
 		} else {
-			throw new InvalidArgumentException("The item was not selected"); */
+			return "A problem occured with this shopping basket";
 		}
 	}
 }

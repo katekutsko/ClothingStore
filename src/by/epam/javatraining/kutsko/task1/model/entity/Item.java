@@ -37,8 +37,6 @@ public class Item implements Comparable<Item> {
 	
 	public Item(double price, Material material, boolean selected, Color color) {
 		super();
-		/* setPrice(price);
-		   setDiscount(discount); */
 		this.price = price;
 		this.material = material;
 		this.selected = selected;

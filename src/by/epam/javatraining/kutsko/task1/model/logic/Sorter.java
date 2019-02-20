@@ -1,5 +1,7 @@
 package by.epam.javatraining.kutsko.task1.model.logic;
 
+import java.util.Comparator;
+
 import by.epam.javatraining.kutsko.task1.exception.ContainerEmptyException;
 import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
 import by.epam.javatraining.kutsko.task1.model.container.Container;
@@ -7,7 +9,7 @@ import by.epam.javatraining.kutsko.task1.model.entity.Item;
 
 public class Sorter {
 	
-	public static void insertionSort(Container container) throws ContainerEmptyException{
+	public static void insertionPriceSort(Container container) throws ContainerEmptyException{
 		Item[] itemSet;
 		try {
 			itemSet = container.getItemSet();
@@ -29,6 +31,7 @@ public class Sorter {
 			}
 			itemSet[j] = temp;
 		}
+		container.setSorted(true);
 	}
 	
 	private static void swap(Item[] itemSet, int i, int j) {
@@ -37,7 +40,7 @@ public class Sorter {
 		itemSet[j] = temp;
 	}
 
-	public static void 	fastSort(Container container) throws ContainerEmptyException {
+	public static void 	fastPriceSort(Container container) throws ContainerEmptyException {
 		Item[] itemSet;
 		int length;
 		try {
@@ -47,6 +50,7 @@ public class Sorter {
 			throw new ContainerEmptyException("Item set is unidentified", e);
 		}
 		doSort(itemSet, 0, length-1);
+		container.setSorted(true);
 	}
 	
 	private static void doSort(Item[] itemSet, int start, int end) {
@@ -74,5 +78,17 @@ public class Sorter {
 		}
 		doSort(itemSet, start, mid);
 		doSort(itemSet, mid+1, end);
+	}
+	
+	public static void sort(Container container, Comparator<Item> comparator) {
+		Item[] itemSet = container.getItemSet();
+		int length = container.getCurrentAmountOfProducts();
+		for (int i = 0; i < length - 1; i++) {
+			for (int j = i + 1; j < length; j++) {
+				if (comparator.compare(itemSet[i], itemSet[j]) > 0) {
+					swap(itemSet, i, j);
+				}
+			}
+		}
 	}
 }

@@ -10,10 +10,6 @@ public class HighHeels extends Shoes {
 		super();
 		heelHeight = 0;
 	}
-
-	public HighHeels(Object... parameters) {
-		this((Double) parameters[0], (Material) parameters[1], (Boolean) parameters[2], (Color) parameters[3], (Integer) parameters[4], (Float) parameters[5]);
-	}
 	
 	public HighHeels(double price, Material material, boolean selected, Color color, int size, float heelHeight) {
 		super(price, material, selected, color, size);
