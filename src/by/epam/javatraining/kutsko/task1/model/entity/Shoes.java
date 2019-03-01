@@ -1,6 +1,7 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.exception.*;
+import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalException;
+import by.epam.javatraining.kutsko.task1.model.exception.InvalidShoeSizeException;
 
 public class Shoes extends Item {
 
@@ -25,9 +26,11 @@ public class Shoes extends Item {
 		return size;
 	}
 	
-	public void setSize(short size) throws InvalidArgumentException {
-		if (size < 35 || size > 45) {
-			throw new InvalidArgumentException("Size " + size + " is not available.");
+	public void setSize(int size) throws InvalidShoeSizeException {
+		if (size > 35 && size < 45) {
+			this.size = size;
+		} else {
+			throw new InvalidShoeSizeException("Size " + size + " is not available.");
 		}
 	}
 
@@ -55,6 +58,7 @@ public class Shoes extends Item {
 		int result = super.hashCode() + prime * size;
 		return result;
 	}
+	
 	@Override
 	public String toString() {
 		return "size: " + size + super.toString();

@@ -4,7 +4,7 @@ size: 39, price: 10.99, material: leather, color: brown, selected: false, heel h
 Scarf
 season: any, price: 24.19, material: cotton, color: pink, selected: false, type: chunky
 HighHeels
-size: 39, price: 19.99, material: leather, color: black, selected: false, heel height: 9.0
+size: 39, price: 19.99, material: poliester, color: black, selected: false, heel height: 9.0
 HighHeels
 size: 36, price: 15.99, material: leather, color: multi, selected: false, heel height: 15.0
 Jumper

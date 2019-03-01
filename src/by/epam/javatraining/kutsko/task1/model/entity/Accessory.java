@@ -22,6 +22,16 @@ public class Accessory extends Item {
 		super(item);
 		this.season = item.season;
 	}
+	
+	public void setSeason(Accessory.Season season) {
+		if (season != null) {
+			this.season = season;
+		}
+	}
+	
+	public Accessory.Season getSeason() {
+		return season;
+	}
 
 	@Override
 	public int hashCode() {

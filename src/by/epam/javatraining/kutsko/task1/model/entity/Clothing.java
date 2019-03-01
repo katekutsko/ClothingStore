@@ -1,6 +1,5 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.exception.*;
 
 /**
  * This class is an abstraction of clothing items.
@@ -23,11 +22,10 @@ public class Clothing extends Item {
 
 	/**
 	 * @param price Price of one unit of goods
-	 * @param discount Product discount in tenths
 	 * @param material Main material for production
 	 * @param selected Shows whether the item was put into shopping basket
 	 * @param color Color of the item
-	 * @param size Size of the item
+	 * @param size Size of the clothing item
 	 */
 	public Clothing(double price, Material material, boolean selected, Color color, Size size) {
 		super(price, material, selected, color);
@@ -46,12 +44,10 @@ public class Clothing extends Item {
 		return size;
 	}
 
-	public void setSize(Size size) throws NonexistentArgumentException {
+	public void setSize(Size size) {
 		if (size != null) {
 			this.size = size;
-		} else {
-			throw new NonexistentArgumentException("Size is unidentified");
-		}
+		} 
 	}
 
 

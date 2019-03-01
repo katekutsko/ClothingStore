@@ -1,62 +1,82 @@
 package by.epam.javatraining.kutsko.task1.controller;
 
-import by.epam.javatraining.kutsko.task1.model.comparator.CategoryComparator;
-import by.epam.javatraining.kutsko.task1.model.comparator.ColorComparator;
+import java.util.List;
+
 import by.epam.javatraining.kutsko.task1.model.container.ClothingStore;
-import by.epam.javatraining.kutsko.task1.model.creator.*;
-import by.epam.javatraining.kutsko.task1.model.entity.*;
+import by.epam.javatraining.kutsko.task1.model.container.ShoppingBasket;
+import by.epam.javatraining.kutsko.task1.model.entity.Item;
+import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferenceException;
+import by.epam.javatraining.kutsko.task1.model.exception.UnsortedItemSetException;
+import by.epam.javatraining.kutsko.task1.model.logic.Calculator;
 import by.epam.javatraining.kutsko.task1.model.logic.Finder;
 import by.epam.javatraining.kutsko.task1.model.logic.Sorter;
-import by.epam.javatraining.kutsko.task1.util.parser.Parser;
+import by.epam.javatraining.kutsko.task1.util.creator.BasketCreator;
+import by.epam.javatraining.kutsko.task1.util.creator.StoreCreator;
+import by.epam.javatraining.kutsko.task1.util.dataconverter.StringCreator;
 import by.epam.javatraining.kutsko.task1.util.reader.DataReader;
-import by.epam.javatraining.kutsko.task1.util.validator.Validator;
-import by.epam.javatraining.kutsko.task1.view.*;
+import by.epam.javatraining.kutsko.task1.util.selector.ItemSelector;
+import by.epam.javatraining.kutsko.task1.view.Printer;
 import by.epam.javatraining.kutsko.task1.view.creator.ConsolePrinterCreator;
 import by.epam.javatraining.kutsko.task1.view.creator.FilePrinterCreator;
 import by.epam.javatraining.kutsko.task1.view.creator.PrinterFactory;
-import by.epam.javatraining.kutsko.task1.exception.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class Controller {
+	
+	public static final String FILE_PATH = "data.txt"; 
 
-	public static void main(String[] args) {
+	public static void main(String[] args)  {
+		List<String> rawData = DataReader.readFromFile(FILE_PATH);
 		
-		List<String> rawData = new ArrayList<String>();
-		
+		StoreCreator storeCreator = StoreCreator.getInstance();
+		ClothingStore store = null;
 		try {
-			rawData = DataReader.readFromFile("data.txt");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		String[] temporaryCopy = new String[rawData.size()];
-		rawData.toArray(temporaryCopy);
-		for (String line : temporaryCopy) {
-			if (!Validator.validateQuantity(line)) {
-				rawData.remove(line);
-			}
+			store = storeCreator.fillWarehouse(rawData);
+		} catch (ContainerFullException e) {
 		}
 		
-		ItemCreator itemCreator = ItemCreator.getInstance();
-		ClothingStore store = (ClothingStore) itemCreator.fillWarehouse(rawData);
 		PrinterFactory creator = PrinterFactory.getInstance();
 		Printer filePrinter = creator.getPrinter(new FilePrinterCreator());
 		Printer consolePrinter = creator.getPrinter(new ConsolePrinterCreator());
+		String contents = store.toString();
+		filePrinter.print(contents); 
+		
 		try {
-			consolePrinter.print(store);
-			filePrinter.print(store);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Sorter.sort(store, new CategoryComparator());
+			Sorter.fastPriceSort(store);
+		} catch (CorruptContainerReferenceException e1) {} 
 		try {
-			consolePrinter.print(store);
-		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println(Finder.binarySearchByPrice(store, 20.00));
+		} catch (UnsortedItemSetException e1) {
 		}
+		
+		double totalPrice = 0;
+		String totalPriceAsString =  "";
+		try {
+			totalPrice = Calculator.calculatePriceOfItems(store);
+			totalPriceAsString = String.valueOf(totalPrice);
+			consolePrinter.print(ClothingStore.STORE_TOTAL_HEADER + totalPriceAsString);
+		} catch (CorruptContainerReferenceException e) {}
+		
+		ShoppingBasket basket = BasketCreator.createBasket();
+		ItemSelector.selectItems(store, basket);
+		//contents = basket.toString();
+		//consolePrinter.print(contents);
+		
+		try {
+			totalPrice = Calculator.calculatePriceOfItems(basket);
+			totalPriceAsString = StringCreator.convertToString(totalPrice);
+			consolePrinter.print(ShoppingBasket.BASKET_TOTAL_HEADER + totalPriceAsString);
+		} catch (CorruptContainerReferenceException e) {}
+		
+		Item[] matchingItems;
+		try {
+			matchingItems = Finder.findAllOfColor(store, Item.Color.BLACK);
+			contents = StringCreator.convertToString(matchingItems);
+			consolePrinter.print(contents);
+		} catch (CorruptContainerReferenceException e) {}
+		
+		
 	}
-
+	
 }
+

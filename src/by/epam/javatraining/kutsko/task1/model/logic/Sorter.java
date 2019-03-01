@@ -2,57 +2,59 @@ package by.epam.javatraining.kutsko.task1.model.logic;
 
 import java.util.Comparator;
 
-import by.epam.javatraining.kutsko.task1.exception.ContainerEmptyException;
-import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
 import by.epam.javatraining.kutsko.task1.model.container.Container;
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferenceException;
+import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalException;
 
 public class Sorter {
-	
-	public static void insertionPriceSort(Container container) throws ContainerEmptyException{
-		Item[] itemSet;
-		try {
-			itemSet = container.getItemSet();
-		} catch (NullPointerException e) {
-			throw new ContainerEmptyException("Item set is unidentified", e);
+
+	public static void insertionPriceSort(Container container) throws CorruptContainerReferenceException {
+		if (container == null) {
+			throw new CorruptContainerReferenceException("Item set is unidentified");
 		}
-		int length = container.getCurrentAmountOfProducts();
-		int j = 0;
-		Item temp = null;
-		for (int i = 0; i < length-1; i++) {
-			if (itemSet[i].compareTo(itemSet[i+1]) > 0) {
-				temp = itemSet[i+1];
-				itemSet[i+1] = itemSet[i];
-				j = i;
+		Item[] itemSet = container.getItemSet();
+		if (itemSet != null) {
+			int length = container.getCurrentAmountOfProducts();
+			int j = 0;
+			Item temp = null;
+			for (int i = 0; i < length - 1; i++) {
+				if (itemSet[i].compareTo(itemSet[i + 1]) > 0) {
+					temp = itemSet[i + 1];
+					itemSet[i + 1] = itemSet[i];
+					j = i;
+				}
+				while ((j > 0) && (itemSet[j - 1].compareTo(temp) > 0)) {
+					itemSet[j] = itemSet[j - 1];
+					j--;
+				}
+				itemSet[j] = temp;
 			}
-			while ((j > 0)  && (itemSet[j-1].compareTo(temp) > 0)) {
-				itemSet[j] = itemSet[j-1];
-				j--;
-			}
-			itemSet[j] = temp;
+			container.setSorted(true);
+		} else {
+			throw new CorruptContainerReferenceException("Item set is unidentified");
 		}
-		container.setSorted(true);
 	}
-	
+
 	private static void swap(Item[] itemSet, int i, int j) {
 		Item temp = itemSet[i];
 		itemSet[i] = itemSet[j];
 		itemSet[j] = temp;
 	}
 
-	public static void 	fastPriceSort(Container container) throws ContainerEmptyException {
+	public static void fastPriceSort(Container container) throws CorruptContainerReferenceException {
 		Item[] itemSet;
 		int length;
 		try {
 			itemSet = container.getItemSet();
 			length = container.getCurrentAmountOfProducts();
 		} catch (NullPointerException e) {
-			throw new ContainerEmptyException("Item set is unidentified", e);
+			throw new CorruptContainerReferenceException("Item set is unidentified", e);
 		}
-		doSort(itemSet, 0, length-1);
+		doSort(itemSet, 0, length - 1);
 		container.setSorted(true);
 	}
-	
+
 	private static void doSort(Item[] itemSet, int start, int end) {
 		if (start >= end) {
 			return;
@@ -77,9 +79,9 @@ public class Sorter {
 			}
 		}
 		doSort(itemSet, start, mid);
-		doSort(itemSet, mid+1, end);
+		doSort(itemSet, mid + 1, end);
 	}
-	
+
 	public static void sort(Container container, Comparator<Item> comparator) {
 		Item[] itemSet = container.getItemSet();
 		int length = container.getCurrentAmountOfProducts();
@@ -90,5 +92,6 @@ public class Sorter {
 				}
 			}
 		}
+		container.setSorted(false);
 	}
 }

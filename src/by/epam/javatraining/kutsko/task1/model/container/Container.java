@@ -1,42 +1,26 @@
 package by.epam.javatraining.kutsko.task1.model.container;
 
-import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
-import by.epam.javatraining.kutsko.task1.exception.NoSuchItemException;
-import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
-
 import java.util.Arrays;
-import by.epam.javatraining.kutsko.task1.exception.WarehouseFullException;
+
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
+import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
+import by.epam.javatraining.kutsko.task1.model.exception.NoSuchItemException;
 
-public class Container {
+public abstract class Container {
 
-	public static final int DEFAULT_CAPACITY = 0;
+	public static final int DEFAULT_CAPACITY = 1;
+	public final static String ERROR_MESSAGE = "A problem occured: no data is available";
 
-	private int currentAmountOfProducts;
-
+	private int currentAmountOfProducts = 0;
 	private Item[] itemSet;
-
-	private int capacity;
-
 	private boolean sorted;
 
-	public Container() {
+	protected Container() {
 		itemSet = new Item[DEFAULT_CAPACITY];
 	}
 
-	public Container(int capacity) {
-		this.capacity = capacity;
+	protected Container(int capacity) {
 		itemSet = new Item[capacity];
-	}
-
-	public void setCapacity(int capacity) {
-		if (capacity > this.capacity) {
-			this.capacity = capacity;
-			itemSet = Arrays.copyOf(itemSet, capacity);
-		} else if (capacity >= currentAmountOfProducts) {
-			this.capacity = capacity;
-			itemSet = Arrays.copyOf(itemSet, capacity);
-		}
 	}
 
 	public boolean isSorted() {
@@ -47,60 +31,66 @@ public class Container {
 		this.sorted = sorted;
 	}
 
-	public int getCapacity() {
-		return capacity;
+	public int getCurrentAmountOfProducts() {
+		return currentAmountOfProducts;
 	}
 
-	public Item getItem(int index) throws NoSuchItemException {
-		if (index >= 0 && index < capacity) {
-			return itemSet[index];
-		} else {
-			throw new NoSuchItemException("There is no item with such index");
-		}
+	protected void setCurrentAmountOfProducts(int newValue) {
+		currentAmountOfProducts = newValue;
 	}
-	
+
+	abstract public Item getItem(int index) throws NoSuchItemException;
+
 	public Item[] getItemSet() {
-		if (itemSet == null) {
-			itemSet = new Item[DEFAULT_CAPACITY];
-		}
 		return itemSet;
 	}
 
-	protected void addProduct(Item item) {
-		if (currentAmountOfProducts < capacity) {
-			if (item != null) {
-				itemSet[currentAmountOfProducts] = item;
-				currentAmountOfProducts++;
-			} else {
-				throw new NullPointerException("Item is unidentified");
-			}
-		} else {
-			setCapacity(capacity+1);
-			itemSet[currentAmountOfProducts] = item;
-		}
-	}
+	abstract public void addProduct(Item item) throws ContainerFullException;
 
-	public boolean removeProduct(int index) throws NoSuchItemException {
-		if (index >= 0 && index < capacity) {
-			if (index >= 0 && index < currentAmountOfProducts) {
-				if (index != currentAmountOfProducts - 1) {
-					for (int i = index; i < currentAmountOfProducts - 1; i++) {
-						itemSet[i] = itemSet[i + 1];
-					}
-					return true;
-				} else {
-					itemSet[index] = null;
-					return true;
+	public boolean removeProduct(int index) {
+		if (index >= 0 && index < currentAmountOfProducts) {
+			if (index != currentAmountOfProducts - 1) {
+				for (int i = index; i < currentAmountOfProducts - 1; i++) {
+					itemSet[i] = itemSet[i + 1];
 				}
+				itemSet[currentAmountOfProducts - 1] = null;
+				currentAmountOfProducts--;
+				return true;
 			} else {
-				return false;
+				itemSet[index] = null;
+				currentAmountOfProducts--;
+				return true;
 			}
 		} else {
-			throw new NoSuchItemException("There is no item with such index");
+			return false;
 		}
 	}
 
-	public int getCurrentAmountOfProducts() {
-		return currentAmountOfProducts;
+	protected void enlargeCapacity() {
+		itemSet = Arrays.copyOf(itemSet, ++currentAmountOfProducts);
+	}
+
+	public void removeAll() {
+		int limit = getCurrentAmountOfProducts();
+		for (int i = limit - 1; i >= 0; i--) {
+			itemSet[i] = null;
+		}
+		currentAmountOfProducts = 0;
+		sorted = false;
+	}
+
+	@Override
+	public String toString() {
+		Item[] thisItemSet = getItemSet();
+		if (thisItemSet != null) {
+			StringBuilder builder = new StringBuilder();
+			for (int i = 0; i < getCurrentAmountOfProducts(); i++) {
+				builder.append(thisItemSet[i].toString());
+				builder.append("\n");
+			}
+			return builder.toString();
+		} else {
+			return ERROR_MESSAGE;
+		}
 	}
 }

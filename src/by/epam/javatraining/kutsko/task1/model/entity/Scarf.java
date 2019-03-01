@@ -1,6 +1,5 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
 import by.epam.javatraining.kutsko.task1.model.entity.Item.Color;
 import by.epam.javatraining.kutsko.task1.model.entity.Item.Material;
 
@@ -31,11 +30,9 @@ public class Scarf extends Accessory {
 		this.type = item.type;
 	}
 
-	public void setType(Type type) throws NonexistentArgumentException {
+	public void setType(Type type) {
 		if (type != null) {
 			this.type = type;
-		} else {
-			throw new NonexistentArgumentException("Type is unidentified");
 		}
 	}
 	

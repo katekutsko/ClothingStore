@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.exception.InvalidArgumentException;
+import by.epam.javatraining.kutsko.task1.model.exception.InvalidHeelHeightException;
 
 public class HighHeels extends Shoes {
 
@@ -25,11 +25,11 @@ public class HighHeels extends Shoes {
 		return heelHeight;
 	}
 
-	public void setHeelHeight(float heelHeight) throws InvalidArgumentException {
+	public void setHeelHeight(float heelHeight) throws InvalidHeelHeightException {
 		if (heelHeight >= 0 && heelHeight <= 20) {
 			this.heelHeight = heelHeight;
 		} else {
-			throw new InvalidArgumentException("Heel height must be from 0 to 20 cm");
+			throw new InvalidHeelHeightException("Heel height must be from 0 to 20 cm");
 		}
 	}
 

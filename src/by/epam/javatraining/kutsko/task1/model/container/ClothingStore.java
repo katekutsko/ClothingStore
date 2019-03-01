@@ -1,41 +1,65 @@
 package by.epam.javatraining.kutsko.task1.model.container;
 
-import by.epam.javatraining.kutsko.task1.exception.NonexistentArgumentException;
-import by.epam.javatraining.kutsko.task1.exception.WarehouseFullException;
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
+import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
+import by.epam.javatraining.kutsko.task1.model.exception.NoSuchItemException;
+import by.epam.javatraining.kutsko.task1.model.exception.WarehouseFullException;
 
 public class ClothingStore extends Container {
-	
-	public final static int MAX_CAPACITY = 10;
-	
-	public ClothingStore() {
-		super(MAX_CAPACITY);
+
+	public final static int MAX_CAPACITY = 100;
+	public final static int DEFAULT_CAPACITY = 10;
+	private final static String HEADER = "Contents of clothing store warehouse:\n";
+	public final static String STORE_TOTAL_HEADER = "Price of all items in store: ";
+
+	private static ClothingStore instance;
+
+	private ClothingStore() {
+		super(DEFAULT_CAPACITY);
 	}
-	
-	public ClothingStore(int capacity) {
-		super(capacity);
+
+	public static ClothingStore getInstance() {
+		if (instance == null) {
+			instance = new ClothingStore();
+		}
+		return instance;
 	}
-	
+
 	public Item[] getItemSet() {
 		return super.getItemSet();
 	}
-	
-	public void addProductToWarehouse(Item item) {
-		super.addProduct(item);
-	}
-	
+
 	@Override
-	public String toString() {
-		Item[] thisItemSet = getItemSet();
-		if (thisItemSet != null) {
-			StringBuilder builder = new StringBuilder("Contents of clothing store warehouse:\n");
-			for (int i = 0; i < super.getCurrentAmountOfProducts(); i++) {
-				builder.append(thisItemSet[i].toString());
-				builder.append("\n");
+	public void addProduct(Item item) throws WarehouseFullException {
+		if (item != null) {
+			int currentAmountOfProducts = super.getCurrentAmountOfProducts();
+			Item[] itemSet = super.getItemSet();
+			if (currentAmountOfProducts < MAX_CAPACITY) {
+				if (currentAmountOfProducts >= DEFAULT_CAPACITY) {
+					super.enlargeCapacity();
+				}
+				itemSet[currentAmountOfProducts] = item;
+				super.setCurrentAmountOfProducts(++currentAmountOfProducts);
+			} else {
+				throw new WarehouseFullException(
+						"You can't add more than " + MAX_CAPACITY + " item onto the warehouse");
 			}
-		return builder.toString();
-		} else {
-			return "A problem occured: no data is available";
 		}
 	}
+
+	@Override
+	public Item getItem(int index) throws NoSuchItemException {
+		if ((index >= 0) || (index < super.getCurrentAmountOfProducts())) {
+			return super.getItemSet()[index];
+		} else {
+			throw new NoSuchItemException("There is no element with index " + index);
+		}
+
+	}
+
+	@Override
+	public String toString() {
+		return HEADER + super.toString();
+	}
+
 }

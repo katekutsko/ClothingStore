@@ -1,7 +1,8 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.util.Comparator;
-import by.epam.javatraining.kutsko.task1.exception.*;
+import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalException;
+import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceException;
 
 /**
  * This class is designed as an abstraction for items of a clothing store.
@@ -54,11 +55,11 @@ public class Item implements Comparable<Item> {
 		return price;
 	}
 
-	public void setPrice(double price) throws InvalidArgumentException {
+	public void setPrice(double price) throws InvalidItemPriceException {
 		if (price > 0) {
 		this.price = price;
 		} else {
-			throw new InvalidArgumentException("Price must not be a negative number", price);
+			throw new InvalidItemPriceException("Price must not be a negative number");
 		}
 	}
 
@@ -66,12 +67,10 @@ public class Item implements Comparable<Item> {
 		return material;
 	}
 
-	public void setMaterial(Material material) throws NonexistentArgumentException {
+	public void setMaterial(Material material) {
 		if (material != null) {
 			this.material = material;
-		} else {
-			throw new NonexistentArgumentException("Material is unidentified");
-		}
+		} 
 	}
 
 	public boolean isSelected() {
@@ -86,12 +85,10 @@ public class Item implements Comparable<Item> {
 		return color;
 	}
 
-	public void setColor(Color color) throws NonexistentArgumentException {
+	public void setColor(Color color) {
 		if (color != null) {
 			this.color = color;
-		} else {
-			throw new NonexistentArgumentException("Color is unidentified");
-		}
+		} 
 	}
 
 	@Override 

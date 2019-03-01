@@ -6,13 +6,17 @@ import java.util.List;
 
 public class DataReader {
 	
-	public static List<String> readFromFile(String path) throws IOException {
-		BufferedReader fis = new BufferedReader(new FileReader(path));
+	public static List<String> readFromFile(String path) {
 		List<String> listOfStrings = new ArrayList<String>();
+		BufferedReader fis;
 		String line;
-		while ((line = fis.readLine()) != null) {
-			listOfStrings.add(line);
-		}
+		try {
+			fis = new BufferedReader(new FileReader(path));
+			while ((line = fis.readLine()) != null) {
+				listOfStrings.add(line);
+			}
+			fis.close();
+		} catch (IOException e) {}
 		return listOfStrings;
 	}
 }
