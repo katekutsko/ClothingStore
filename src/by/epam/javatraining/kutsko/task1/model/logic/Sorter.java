@@ -9,6 +9,22 @@ import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalExc
 
 public class Sorter {
 
+	private static Comparator<Item> colorComparator = (firstItem, secondItem) -> {
+		int comparisonResult = firstItem.getColor().compareTo(secondItem.getColor());
+		if (comparisonResult == 0) {
+			comparisonResult = firstItem.compareTo(secondItem);
+		}
+		return comparisonResult;
+	};
+
+	private static Comparator<Item> categoryComparator = (firstItem, secondItem) -> {
+		int comparisonResult = firstItem.getClass().getSimpleName().compareTo(secondItem.getClass().getSimpleName());
+		if (comparisonResult == 0) {
+			comparisonResult = firstItem.compareTo(secondItem);
+		}
+		return comparisonResult;
+	};
+
 	public static void insertionPriceSort(Container container) throws CorruptContainerReferenceException {
 		if (container == null) {
 			throw new CorruptContainerReferenceException("Item set is unidentified");
@@ -51,11 +67,11 @@ public class Sorter {
 		} catch (NullPointerException e) {
 			throw new CorruptContainerReferenceException("Item set is unidentified", e);
 		}
-		doSort(itemSet, 0, length - 1);
+		doFastSort(itemSet, 0, length - 1);
 		container.setSorted(true);
 	}
 
-	private static void doSort(Item[] itemSet, int start, int end) {
+	private static void doFastSort(Item[] itemSet, int start, int end) {
 		if (start >= end) {
 			return;
 		}
@@ -78,11 +94,19 @@ public class Sorter {
 				}
 			}
 		}
-		doSort(itemSet, start, mid);
-		doSort(itemSet, mid + 1, end);
+		doFastSort(itemSet, start, mid);
+		doFastSort(itemSet, mid + 1, end);
 	}
 
-	public static void sort(Container container, Comparator<Item> comparator) {
+	public static void colorSort(Container container) {
+		sort(container, colorComparator);
+	}
+
+	public static void categorySort(Container container) {
+		sort(container, categoryComparator);
+	}
+
+	private static void sort(Container container, Comparator<Item> comparator) {
 		Item[] itemSet = container.getItemSet();
 		int length = container.getCurrentAmountOfProducts();
 		for (int i = 0; i < length - 1; i++) {
