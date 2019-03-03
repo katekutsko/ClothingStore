@@ -10,21 +10,17 @@ import by.epam.javatraining.kutsko.task1.model.entity.Scarf;
 import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferenceException;
 import by.epam.javatraining.kutsko.task1.model.logic.Calculator;
-import by.epam.javatraining.kutsko.task1.util.creator.StoreCreator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class CalculatorTest {
 
 	private static ClothingStore store;
-
+	
 	@Test
 	public void calculateTotalOfContainerTest() throws CorruptContainerReferenceException, ContainerFullException {
 		store = ClothingStore.getInstance();

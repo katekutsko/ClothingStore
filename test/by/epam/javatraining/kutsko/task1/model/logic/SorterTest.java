@@ -16,6 +16,7 @@ import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferen
 import by.epam.javatraining.kutsko.task1.model.exception.NoSuchItemException;
 import by.epam.javatraining.kutsko.task1.model.logic.Sorter;
 import by.epam.javatraining.kutsko.task1.util.creator.StoreCreator;
+import by.epam.javatraining.kutsko.task1.util.initializer.Initializer;
 
 public class SorterTest {
 
@@ -23,16 +24,14 @@ public class SorterTest {
 
 	@BeforeClass
 	public static void initContainer() {
-		if (store == null) {
-			StoreCreator creator = StoreCreator.getInstance();
-			List<String> rawData = new ArrayList<String>();
-			rawData.add("2 10.19 COTTON false PINK ANY CHUNKY");
-			rawData.add("1 19.99 LEATHER false MULTI 39 9");
-			rawData.add("3 23.00 POLIESTER false GREEN XXL TUNIC");
-			try {
-				store = creator.fillWarehouse(rawData);
-			} catch (ContainerFullException e) {
-			}
+		store = StoreCreator.getStore();
+		List<String> rawData = new ArrayList<String>();
+		rawData.add("2 10.19 COTTON false PINK ANY CHUNKY");
+		rawData.add("1 19.99 LEATHER false MULTI 39 9");
+		rawData.add("3 23.00 POLIESTER false GREEN XXL TUNIC");
+		try {
+			store = Initializer.fillWarehouse(store, rawData);
+		} catch (ContainerFullException | CorruptContainerReferenceException e) {
 		}
 	}
 
@@ -44,7 +43,7 @@ public class SorterTest {
 		expected[1] = new Scarf(10.19, Item.Material.COTTON, false, Item.Color.PINK, Accessory.Season.ANY,
 				Scarf.Type.CHUNKY);
 		expected[2] = new HighHeels(19.99, Item.Material.LEATHER, false, Item.Color.MULTI, 39, 9);
-		Sorter.sort(store, new ColorComparator());
+		Sorter.colorSort(store);
 		Item[] actual = store.getItemSet();
 		Assert.assertArrayEquals(expected, actual);
 	}
@@ -70,7 +69,7 @@ public class SorterTest {
 		expected[0] = new HighHeels(19.99, Item.Material.LEATHER, false, Item.Color.MULTI, 39, 9);
 		expected[1] = new Jumper(23., Item.Material.POLIESTER, false, Item.Color.GREEN, Clothing.Size.XXL,
 				Jumper.Type.TUNIC);
-		Sorter.sort(store, new CategoryComparator());
+		Sorter.categorySort(store);
 		Item[] actual = store.getItemSet();
 		Assert.assertArrayEquals(expected, actual);
 	}
