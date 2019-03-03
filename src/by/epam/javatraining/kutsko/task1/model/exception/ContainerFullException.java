@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.exception;
 
-public class ContainerFullException extends Exception {
+public class ContainerFullException extends ClothingStoreTechnicalException {
 
 	public ContainerFullException() {
 		super();

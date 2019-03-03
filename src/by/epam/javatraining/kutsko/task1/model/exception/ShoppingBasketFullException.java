@@ -1,6 +1,4 @@
-package by.epam.javatraining.kutsko.task1.model.container;
-
-import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
+package by.epam.javatraining.kutsko.task1.model.exception;
 
 public class ShoppingBasketFullException extends ContainerFullException {
 

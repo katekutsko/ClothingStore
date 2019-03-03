@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.exception;
 
-public class NoSuchItemException extends Exception {
+public class NoSuchItemException extends ClothingStoreTechnicalException {
 
 	public NoSuchItemException() {
 		super();
