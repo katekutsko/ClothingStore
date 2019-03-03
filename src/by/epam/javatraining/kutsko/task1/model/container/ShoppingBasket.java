@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.container;
 
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
 import by.epam.javatraining.kutsko.task1.model.exception.NoSuchItemException;
+import by.epam.javatraining.kutsko.task1.model.exception.ShoppingBasketFullException;
 
 public class ShoppingBasket extends Container {
 
@@ -44,14 +45,7 @@ public class ShoppingBasket extends Container {
 			}
 		}
 	}
-
-	public void removeProductFromBasket(int index) {
-		if (super.getCurrentAmountOfProducts() >= index) {
-			super.getItemSet()[index].setSelected(false);
-			super.removeProduct(index);
-		}
-	}
-
+	
 	@Override
 	public Item getItem(int index) throws NoSuchItemException {
 		if (index < capacity) {
