@@ -1,6 +1,7 @@
 package by.epam.javatraining.kutsko.task1.model.container;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -54,7 +55,15 @@ public class ClothingStore {
 	public ClothingStore(ClothingStore store) {
 		this();
 		if ((store != null) && (store.itemSet != null)) {
-			itemSet = Arrays.copyOf(store.itemSet, store.itemSet.length);
+			itemSet = new Item[store.currentAmountOfProducts];
+			for (int i = 0; i < store.currentAmountOfProducts; i++) {
+				try {
+					addProduct((Item) store.itemSet[i].clone());
+				} catch (WarehouseFullException e) {
+				} catch (CorruptItemReferenceException e) {
+					LOGGER.info("Item in the template storage was null");
+				}
+			}
 		}
 		else {
 			LOGGER.warn("Reference to a template object was null");
