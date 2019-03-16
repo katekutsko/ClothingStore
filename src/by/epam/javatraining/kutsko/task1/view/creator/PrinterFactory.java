@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.view.creator;
 
-import by.epam.javatraining.kutsko.task1.view.Printer;
+import by.epam.javatraining.kutsko.task1.view.Printable;
 
 public class PrinterFactory {
 	
@@ -8,7 +8,7 @@ public class PrinterFactory {
 	
 	private PrinterFactory() {}
 	
-	public Printer getPrinter(AbstractViewerCreator creator) {
+	public Printable getPrinter(AbstractViewerCreator creator) {
 		return creator.create();
 	}
 	

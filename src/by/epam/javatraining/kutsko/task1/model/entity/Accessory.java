@@ -1,7 +1,14 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-public class Accessory extends Item {
+import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
+
+public class Accessory extends Item implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private Season season;
 	
 	public enum Season {
@@ -23,9 +30,11 @@ public class Accessory extends Item {
 		this.season = item.season;
 	}
 	
-	public void setSeason(Accessory.Season season) {
+	public void setSeason(Accessory.Season season) throws CorruptParameterReferenceException {
 		if (season != null) {
 			this.season = season;
+		} else {
+			throw new CorruptParameterReferenceException("Parameter reference was null");
 		}
 	}
 	
@@ -35,9 +44,8 @@ public class Accessory extends Item {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((season == null) ? 0 : season.hashCode());
+		result += ((season == null) ? 1 : season.hashCode());
 		return result;
 	}
 

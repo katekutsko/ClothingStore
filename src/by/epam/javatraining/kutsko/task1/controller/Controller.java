@@ -2,81 +2,97 @@ package by.epam.javatraining.kutsko.task1.controller;
 
 import java.util.List;
 
+import org.apache.log4j.*;
+
+import by.epam.javatraining.kutsko.task1.ioutil.dataconverter.StringCreator;
+import by.epam.javatraining.kutsko.task1.ioutil.reader.DataReader;
 import by.epam.javatraining.kutsko.task1.model.container.ClothingStore;
-import by.epam.javatraining.kutsko.task1.model.container.ShoppingBasket;
-import by.epam.javatraining.kutsko.task1.model.entity.Item;
-import by.epam.javatraining.kutsko.task1.model.exception.ContainerFullException;
+import by.epam.javatraining.kutsko.task1.model.entity.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferenceException;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptItemReferenceException;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
+import by.epam.javatraining.kutsko.task1.model.exception.NoSuchItemException;
 import by.epam.javatraining.kutsko.task1.model.exception.UnsortedItemSetException;
-import by.epam.javatraining.kutsko.task1.model.logic.Calculator;
-import by.epam.javatraining.kutsko.task1.model.logic.Finder;
-import by.epam.javatraining.kutsko.task1.model.logic.Sorter;
-import by.epam.javatraining.kutsko.task1.util.creator.BasketCreator;
-import by.epam.javatraining.kutsko.task1.util.creator.StoreCreator;
-import by.epam.javatraining.kutsko.task1.util.dataconverter.StringCreator;
-import by.epam.javatraining.kutsko.task1.util.reader.DataReader;
-import by.epam.javatraining.kutsko.task1.util.selector.ItemSelector;
-import by.epam.javatraining.kutsko.task1.view.Printer;
-import by.epam.javatraining.kutsko.task1.view.creator.ConsolePrinterCreator;
-import by.epam.javatraining.kutsko.task1.view.creator.FilePrinterCreator;
-import by.epam.javatraining.kutsko.task1.view.creator.PrinterFactory;
+import by.epam.javatraining.kutsko.task1.model.exception.WarehouseFullException;
+import by.epam.javatraining.kutsko.task1.model.logic.*;
+import by.epam.javatraining.kutsko.task1.model.logic.comparator.ColorComparator;
+import by.epam.javatraining.kutsko.task1.util.initializer.*;
+import by.epam.javatraining.kutsko.task1.view.Printable;
+import by.epam.javatraining.kutsko.task1.view.creator.*;
+import by.epam.javatraining.kutsko.task3.serializator.ItemDeserializator;
+import by.epam.javatraining.kutsko.task3.serializator.ItemSerializator;
 
 public class Controller {
-	
-	public static final String FILE_PATH = "data.txt"; 
 
-	public static void main(String[] args)  {
-		List<String> rawData = DataReader.readFromFile(FILE_PATH);
-		
-		StoreCreator storeCreator = StoreCreator.getInstance();
-		ClothingStore store = null;
-		try {
-			store = storeCreator.fillWarehouse(rawData);
-		} catch (ContainerFullException e) {
-		}
-		
-		PrinterFactory creator = PrinterFactory.getInstance();
-		Printer filePrinter = creator.getPrinter(new FilePrinterCreator());
-		Printer consolePrinter = creator.getPrinter(new ConsolePrinterCreator());
-		String contents = store.toString();
-		filePrinter.print(contents); 
-		
-		try {
-			Sorter.fastPriceSort(store);
-		} catch (CorruptContainerReferenceException e1) {} 
-		try {
-			System.out.println(Finder.binarySearchByPrice(store, 20.00));
-		} catch (UnsortedItemSetException e1) {
-		}
-		
-		double totalPrice = 0;
-		String totalPriceAsString =  "";
-		try {
-			totalPrice = Calculator.calculatePriceOfItems(store);
-			totalPriceAsString = String.valueOf(totalPrice);
-			consolePrinter.print(ClothingStore.STORE_TOTAL_HEADER + totalPriceAsString);
-		} catch (CorruptContainerReferenceException e) {}
-		
-		ShoppingBasket basket = BasketCreator.createBasket();
-		ItemSelector.selectItems(store, basket);
-		//contents = basket.toString();
-		//consolePrinter.print(contents);
-		
-		try {
-			totalPrice = Calculator.calculatePriceOfItems(basket);
-			totalPriceAsString = StringCreator.convertToString(totalPrice);
-			consolePrinter.print(ShoppingBasket.BASKET_TOTAL_HEADER + totalPriceAsString);
-		} catch (CorruptContainerReferenceException e) {}
-		
-		Item[] matchingItems;
-		try {
-			matchingItems = Finder.findAllOfColor(store, Item.Color.BLACK);
-			contents = StringCreator.convertToString(matchingItems);
-			consolePrinter.print(contents);
-		} catch (CorruptContainerReferenceException e) {}
-		
-		
+	private static final Logger LOGGER;
+
+	static {
+		LOGGER = Logger.getRootLogger();
+		PropertyConfigurator.configure("log4j.properties");
 	}
-	
-}
 
+	public static void main(String[] args) {
+
+		String filePath = "data.txt";
+
+		List<String> rawData = null;
+		try {
+			rawData = DataReader.readFromTxtFile(filePath);
+		} catch (CorruptParameterReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+		
+    	Item[] itemSet = null;
+		try {
+			itemSet = ItemSetCreator.createItemSet(rawData);
+		} catch (CorruptParameterReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+		
+		ClothingStore store = new ClothingStore();
+		try {
+			Initializer.fillWarehouse(store, itemSet);
+		} catch (WarehouseFullException | CorruptContainerReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		PrinterFactory factory = PrinterFactory.getInstance();
+		Printable consolePrinter = factory.getPrinter(new ConsolePrinterCreator());
+		consolePrinter.print(StringCreator.convertToString(store));
+			
+		try {
+			Sorter.insertionPriceSort(store);
+			Sorter.sort(store, new ColorComparator());
+		} catch (CorruptContainerReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		consolePrinter.print(StringCreator.convertToString(store));
+
+		try {
+			Item found = Finder.binarySearchByPrice(store, 20.);
+			consolePrinter.print(StringCreator.convertToString(found));
+		} catch (UnsortedItemSetException | CorruptContainerReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		try {
+			double totalPrice = Calculator.calculatePriceOfItems(store);
+			consolePrinter.print("Total price: " + StringCreator.convertToString(totalPrice) + "\n");
+		} catch (CorruptContainerReferenceException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		String itemSerializationFileName = "serialization.bin";
+		try {
+			ItemSerializator.write(itemSerializationFileName, store.getItem(1));
+		} catch (NoSuchItemException e) {
+			LOGGER.error(e.getMessage());
+		}
+		Item deserialized = ItemDeserializator.read(itemSerializationFileName);
+
+		consolePrinter.print("Deserialized: " + StringCreator.convertToString(deserialized));
+
+	}
+
+}

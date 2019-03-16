@@ -1,10 +1,14 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalException;
+import java.io.Serializable;
+
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidShoeSizeException;
 
-public class Shoes extends Item {
+public class Shoes extends Item  implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private int size;
 	
 	public Shoes() {

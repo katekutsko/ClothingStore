@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.exception;
 
-public class WarehouseFullException extends ContainerFullException {
+public class WarehouseFullException extends ClothingStoreLogicalException {
 
 	public WarehouseFullException() {
 		super();

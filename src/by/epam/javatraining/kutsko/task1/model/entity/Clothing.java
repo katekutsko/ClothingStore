@@ -1,5 +1,9 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
+import java.io.Serializable;
+
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
 /**
  * This class is an abstraction of clothing items.
@@ -7,8 +11,9 @@ package by.epam.javatraining.kutsko.task1.model.entity;
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public class Clothing extends Item {
+public class Clothing extends Item implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private Size size;
 	
 	public enum Size {
@@ -44,18 +49,19 @@ public class Clothing extends Item {
 		return size;
 	}
 
-	public void setSize(Size size) {
+	public void setSize(Size size) throws CorruptParameterReferenceException {
 		if (size != null) {
 			this.size = size;
-		} 
+		} else {
+			throw new CorruptParameterReferenceException("Parameter reference was null");
+		}
 	}
 
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((size == null) ? 0 : size.hashCode());
+		result += ((size == null) ? 0 : size.hashCode());
 		return result;
 	}
 

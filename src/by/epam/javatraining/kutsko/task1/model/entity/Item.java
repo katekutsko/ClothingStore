@@ -1,7 +1,8 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import java.util.Comparator;
-import by.epam.javatraining.kutsko.task1.model.exception.ClothingStoreLogicalException;
+import java.io.Serializable;
+
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceException;
 
 /**
@@ -10,8 +11,10 @@ import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceExcepti
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public class Item implements Comparable<Item> {
-	
+public class Item implements Comparable<Item>, Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private double price;
 	
 	private Material material;
@@ -20,14 +23,9 @@ public class Item implements Comparable<Item> {
 
 	private Color color;
 
-	public enum Material {
-		WOOL, LEATHER, POLIESTER, COTTON, VISCOSE, SILK, OTHER
-	}
-	
-	public enum Color {
-		WHITE, BLACK, RED, BLUE, GREEN, BROWN, PINK, GREY, MULTI
-	} 
-	
+	/**
+	 * Default constructor for class Item
+	 */
 	public Item() {
 		super();
 		this.price = 0;
@@ -35,26 +33,43 @@ public class Item implements Comparable<Item> {
 		this.selected = false;
 		this.color = Color.MULTI;
 	}
-	
+	/**
+	 * Parametrized constructor. Accepts all parameters for items in specified order
+	 * @param price price of the item
+	 * @param material material the item is made of
+	 * @param selected shows whether the item was selected
+	 * @param color color of the item
+	 */
 	public Item(double price, Material material, boolean selected, Color color) {
-		super();
 		this.price = price;
 		this.material = material;
 		this.selected = selected;
 		this.color = color;
 	}
-	
+	/**
+	 * Copying constructor, accepts item to be copied.
+	 * @param item template for copying
+	 */
 	public Item(Item item) {
-		this.price = item.getPrice();
-		this.material = item.getMaterial();
-		this.selected = item.isSelected();
-		this.color = item.getColor();
+		this();
+		if (item != null) {
+			this.price = item.getPrice();
+			this.material = item.getMaterial();
+			this.selected = item.isSelected();
+			this.color = item.getColor();
+		}
 	}
-
+	/**
+	 * @return Price of the item
+	 */
 	public double getPrice() {
 		return price;
 	}
-
+	/**
+	 * 
+	 * @param price price to be set
+	 * @throws InvalidItemPriceException is thrown when price is negative
+	 */
 	public void setPrice(double price) throws InvalidItemPriceException {
 		if (price > 0) {
 		this.price = price;
@@ -63,28 +78,46 @@ public class Item implements Comparable<Item> {
 		}
 	}
 
+	/**
+	 * @return material of the item
+	 */
 	public Material getMaterial() {
 		return material;
 	}
-
+	
+	/** 
+	 * @param material material to be set
+	 */
 	public void setMaterial(Material material) {
 		if (material != null) {
 			this.material = material;
 		} 
 	}
-
+	/**
+	 * @return indicator that shows if item is selected
+	 */
 	public boolean isSelected() {
 		return selected;
 	}
-
+	
+	/**
+	 * @param selected indicator that shows if item is selected
+	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
+	/**
+	 * @return color of the item
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * 
+	 * @param color color to be set
+	 */
 	public void setColor(Color color) {
 		if (color != null) {
 			this.color = color;
@@ -102,10 +135,9 @@ public class Item implements Comparable<Item> {
 		if (getClass() != otherItem.getClass()) {
 			return false;
 		}
-		if (otherItem.hashCode() != this.hashCode()) {
-			return false;
-		}
+		
 		Item item = (Item) otherItem;
+		
 		if ((item.price != price) || (item.selected != selected)
 		|| (item.color != color) || (item.material != material)) {
 			return false;
@@ -120,13 +152,13 @@ public class Item implements Comparable<Item> {
 		int result = 1;
 		long temp;
 		temp = Double.doubleToLongBits(price);
-		result += prime * (int) (temp >>> 32);
-		result += prime * (selected ? 1231 : 1237);
+		result += (int) (temp >>> 32);
+		result += prime *(selected ? 1231 : 1237);
 		result += (material == null ? 0 : material.hashCode());
 		result += (color == null ? 0 : color.hashCode());
 		return result;
 	}
-	 
+	
 	public int compareTo(Item secondItem) {
 		return Double.compare(getPrice(), secondItem.getPrice());
 	}

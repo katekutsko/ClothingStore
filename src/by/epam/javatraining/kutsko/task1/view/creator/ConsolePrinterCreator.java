@@ -1,11 +1,11 @@
 package by.epam.javatraining.kutsko.task1.view.creator;
 
 import by.epam.javatraining.kutsko.task1.view.ConsolePrinter;
-import by.epam.javatraining.kutsko.task1.view.Printer;
+import by.epam.javatraining.kutsko.task1.view.Printable;
 
 public class ConsolePrinterCreator implements AbstractViewerCreator {
 
-	public Printer create() {
+	public Printable create() {
 		return new ConsolePrinter();
 	}
 

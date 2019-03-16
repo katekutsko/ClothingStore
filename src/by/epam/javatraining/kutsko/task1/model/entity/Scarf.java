@@ -1,10 +1,13 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
-import by.epam.javatraining.kutsko.task1.model.entity.Item.Color;
-import by.epam.javatraining.kutsko.task1.model.entity.Item.Material;
+import java.io.Serializable;
 
-public class Scarf extends Accessory {
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
+import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
+public class Scarf extends Accessory implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	private Type type;
 	
 	public enum Type {
@@ -30,9 +33,11 @@ public class Scarf extends Accessory {
 		this.type = item.type;
 	}
 
-	public void setType(Type type) {
+	public void setType(Type type) throws CorruptParameterReferenceException {
 		if (type != null) {
 			this.type = type;
+		} else {
+			throw new CorruptParameterReferenceException("Type reference was null");
 		}
 	}
 	

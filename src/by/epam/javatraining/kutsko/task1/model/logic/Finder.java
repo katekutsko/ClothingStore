@@ -1,16 +1,16 @@
 package by.epam.javatraining.kutsko.task1.model.logic;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
-import by.epam.javatraining.kutsko.task1.model.container.Container;
+import by.epam.javatraining.kutsko.task1.model.container.ClothingStore;
 import by.epam.javatraining.kutsko.task1.model.entity.Item;
+import by.epam.javatraining.kutsko.task1.model.entity.type.Color;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptContainerReferenceException;
 import by.epam.javatraining.kutsko.task1.model.exception.UnsortedItemSetException;
 
 public class Finder {
 
-	public static Item[] findAllOfColor(Container container, Item.Color color)
+	public static Item[] findAllOfColor(ClothingStore container, Color color)
 			throws CorruptContainerReferenceException {
 		if (container != null) {
 			Item[] itemSet = container.getItemSet();
@@ -31,7 +31,7 @@ public class Finder {
 		}
 	}
 
-	public static Item[] findAllOfType(Container container, String type) throws CorruptContainerReferenceException {
+	public static Item[] findAllOfType(ClothingStore container, String type) throws CorruptContainerReferenceException {
 		if (container != null) {
 			Item[] itemSet = container.getItemSet();
 			if (itemSet != null) {
@@ -51,7 +51,7 @@ public class Finder {
 		}
 	}
 
-	public static Item[] findAllInPriceRange(Container container, double minPrice, double maxPrice)
+	public static Item[] findAllInPriceRange(ClothingStore container, double minPrice, double maxPrice)
 			throws CorruptContainerReferenceException {
 		if (container != null) {
 			Item[] itemSet = container.getItemSet();
@@ -72,36 +72,49 @@ public class Finder {
 		}
 	}
 
-	public static Item binarySearchByPrice(Container container, double price) throws UnsortedItemSetException {
-		if (container.isSorted()) {
-			int index = binary(container, 0, container.getCurrentAmountOfProducts() - 1, price);
-			if (index != -1) {
-				return container.getItemSet()[index];
+	public static Item binarySearchByPrice(ClothingStore container, double price)
+			throws UnsortedItemSetException, CorruptContainerReferenceException {
+		if (container != null) {
+			if (container.isSorted()) {
+				int index = binary(container, 0, container.getCurrentAmountOfProducts() - 1, price);
+				if (index != -1) {
+					return container.getItemSet()[index];
+				} else {
+					return null;
+				}
 			} else {
-				return null;
+				throw new UnsortedItemSetException("Item set in the container wasn't sorted by price");
 			}
-		} else {
-			throw new UnsortedItemSetException("Item set in the container wasn't sorted by price");
-		}
+		} 
+		throw new CorruptContainerReferenceException("Reference to the store was null");
+
 	}
 
-	private static int binary(Container container, int start, int end, double price) {
-		if (start == end) {
-			if (price != container.getItemSet()[end].getPrice()) {
+	private static int binary(ClothingStore container, int start, int end, double price)
+			throws CorruptContainerReferenceException {
+		if (container != null) {
+			if (start == end) {
+				if (price != container.getItemSet()[end].getPrice()) {
+					return -1;
+				} else {
+					return end;
+				}
+			}
+			int mid = start + (end - start) / 2;
+			Item midItem = container.getItemSet()[mid];
+			if (midItem != null) {
+				if (price > midItem.getPrice()) {
+					return binary(container, mid + 1, end, price);
+				} else if (price < container.getItemSet()[mid].getPrice()) {
+					return binary(container, start, mid, price);
+				} else {
+					return mid;
+				}
+			} else {
 				return -1;
-			} else {
-				return end;
 			}
-		}
-		int mid = start + (end - start) / 2;
-		if (price > container.getItemSet()[mid].getPrice()) {
-			return binary(container, mid + 1, end, price);
-		} else if (price < container.getItemSet()[mid].getPrice()) {
-			return binary(container, start, mid, price);
 		} else {
-			return mid;
+			throw new CorruptContainerReferenceException();
 		}
-
 	}
-
 }

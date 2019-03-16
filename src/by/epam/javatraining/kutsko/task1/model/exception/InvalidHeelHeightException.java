@@ -6,8 +6,8 @@ public class InvalidHeelHeightException extends ClothingStoreLogicalException {
 		super();
 	}
 
-	public InvalidHeelHeightException(String message) {
-		super(message);
+	public InvalidHeelHeightException(String arg) {
+		super(arg);
 	}
 
 }

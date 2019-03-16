@@ -1,9 +1,13 @@
 package by.epam.javatraining.kutsko.task1.model.entity;
 
+import java.io.Serializable;
+
+import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidHeelHeightException;
 
-public class HighHeels extends Shoes {
+public class HighHeels extends Shoes implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	private float heelHeight;
 	
 	public HighHeels() {

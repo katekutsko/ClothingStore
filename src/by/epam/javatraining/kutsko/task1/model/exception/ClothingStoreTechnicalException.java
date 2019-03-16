@@ -1,6 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.exception;
 
-public class ClothingStoreTechnicalException extends Exception {
+public class ClothingStoreTechnicalException extends ClothingStoreException {
 
 	public ClothingStoreTechnicalException() {
 		super();
