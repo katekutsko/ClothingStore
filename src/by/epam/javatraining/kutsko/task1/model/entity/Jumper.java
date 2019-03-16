@@ -5,7 +5,7 @@ import java.io.Serializable;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
-public class Jumper extends Clothing implements Serializable {
+public class Jumper extends Clothing implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	private Type type;
@@ -65,6 +65,13 @@ public class Jumper extends Clothing implements Serializable {
 		int result = super.hashCode();
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
+	}
+	
+	@Override
+	public Object clone() {
+		Clothing item = (Clothing) super.clone();
+		Jumper clothing = new Jumper(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getSize(), type);
+		return clothing;
 	}
 	
 	@Override

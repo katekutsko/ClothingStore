@@ -5,7 +5,7 @@ import java.io.Serializable;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidHeelHeightException;
 
-public class HighHeels extends Shoes implements Serializable {
+public class HighHeels extends Shoes implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	private float heelHeight;
@@ -59,6 +59,14 @@ public class HighHeels extends Shoes implements Serializable {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public Object clone() {
+		Shoes item = (Shoes) super.clone();
+		HighHeels shoes = new HighHeels(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getSize(), heelHeight);
+		return shoes;
+	}
+	
 	
 	@Override
 	public String toString() {

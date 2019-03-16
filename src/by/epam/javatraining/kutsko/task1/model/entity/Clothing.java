@@ -11,7 +11,7 @@ import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferen
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public class Clothing extends Item implements Serializable {
+public class Clothing extends Item implements Serializable, Cloneable {
 	
 	private static final long serialVersionUID = 1L;
 	private Size size;
@@ -77,6 +77,13 @@ public class Clothing extends Item implements Serializable {
 		if (size != other.size)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public Object clone() {
+		Item item = (Item) super.clone();
+		Clothing clothing = new Clothing(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), size);
+		return clothing;
 	}
 	
 	@Override

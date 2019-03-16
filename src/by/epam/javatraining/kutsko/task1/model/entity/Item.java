@@ -11,7 +11,7 @@ import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceExcepti
  * @version		1.0 14 Feb 2019
  * @author		Kate Kutsko
  */
-public class Item implements Comparable<Item>, Serializable {
+public class Item implements Comparable<Item>, Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -159,6 +159,13 @@ public class Item implements Comparable<Item>, Serializable {
 		return result;
 	}
 	
+	@Override
+	public Object clone() {
+		Item item = new Item(price, material, selected, color);
+		return item;
+	}
+	
+	@Override
 	public int compareTo(Item secondItem) {
 		return Double.compare(getPrice(), secondItem.getPrice());
 	}

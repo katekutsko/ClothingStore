@@ -5,7 +5,7 @@ import java.io.Serializable;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidShoeSizeException;
 
-public class Shoes extends Item  implements Serializable {
+public class Shoes extends Item  implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -61,6 +61,13 @@ public class Shoes extends Item  implements Serializable {
 		final int prime = 31;
 		int result = super.hashCode() + prime * size;
 		return result;
+	}
+	
+	@Override
+	public Object clone() {
+		Item item = (Item) super.clone();
+		Shoes shoes = new Shoes(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), size);
+		return shoes;
 	}
 	
 	@Override

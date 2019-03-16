@@ -5,7 +5,7 @@ import java.io.Serializable;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
-public class Accessory extends Item implements Serializable {
+public class Accessory extends Item implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -61,6 +61,13 @@ public class Accessory extends Item implements Serializable {
 		if (season != other.season)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public Object clone() {
+		Item item = (Item) super.clone();
+		Accessory accessory = new Accessory(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), season);
+		return accessory;
 	}
 	
 	@Override 
