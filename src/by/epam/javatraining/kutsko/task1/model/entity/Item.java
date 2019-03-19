@@ -2,23 +2,24 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceException;
 
 /**
  * This class is designed as an abstraction for items of a clothing store.
  * 
- * @version		1.0 14 Feb 2019
- * @author		Kate Kutsko
+ * @version 1.0 14 Feb 2019
+ * @author Kate Kutsko
  */
 public class Item implements Comparable<Item>, Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 
 	private double price;
-	
+
 	private Material material;
-	
+
 	private boolean selected;
 
 	private Color color;
@@ -33,12 +34,14 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		this.selected = false;
 		this.color = Color.MULTI;
 	}
+
 	/**
 	 * Parametrized constructor. Accepts all parameters for items in specified order
-	 * @param price price of the item
+	 * 
+	 * @param price    price of the item
 	 * @param material material the item is made of
 	 * @param selected shows whether the item was selected
-	 * @param color color of the item
+	 * @param color    color of the item
 	 */
 	public Item(double price, Material material, boolean selected, Color color) {
 		this.price = price;
@@ -46,8 +49,10 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		this.selected = selected;
 		this.color = color;
 	}
+
 	/**
 	 * Copying constructor, accepts item to be copied.
+	 * 
 	 * @param item template for copying
 	 */
 	public Item(Item item) {
@@ -59,12 +64,14 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 			this.color = item.getColor();
 		}
 	}
+
 	/**
 	 * @return Price of the item
 	 */
 	public double getPrice() {
 		return price;
 	}
+
 	/**
 	 * 
 	 * @param price price to be set
@@ -72,7 +79,7 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	 */
 	public void setPrice(double price) throws InvalidItemPriceException {
 		if (price > 0) {
-		this.price = price;
+			this.price = price;
 		} else {
 			throw new InvalidItemPriceException("Price must not be a negative number");
 		}
@@ -84,22 +91,23 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	public Material getMaterial() {
 		return material;
 	}
-	
-	/** 
+
+	/**
 	 * @param material material to be set
 	 */
 	public void setMaterial(Material material) {
 		if (material != null) {
 			this.material = material;
-		} 
+		}
 	}
+
 	/**
 	 * @return indicator that shows if item is selected
 	 */
 	public boolean isSelected() {
 		return selected;
 	}
-	
+
 	/**
 	 * @param selected indicator that shows if item is selected
 	 */
@@ -121,10 +129,10 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	public void setColor(Color color) {
 		if (color != null) {
 			this.color = color;
-		} 
+		}
 	}
 
-	@Override 
+	@Override
 	public boolean equals(Object otherItem) {
 		if (this == otherItem) {
 			return true;
@@ -135,17 +143,17 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		if (getClass() != otherItem.getClass()) {
 			return false;
 		}
-		
+
 		Item item = (Item) otherItem;
-		
-		if ((item.price != price) || (item.selected != selected)
-		|| (item.color != color) || (item.material != material)) {
+
+		if ((item.price != price) || (item.selected != selected) || (item.color != color)
+				|| (item.material != material)) {
 			return false;
 		} else {
 			return true;
 		}
-	} 
-	
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -153,27 +161,29 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		long temp;
 		temp = Double.doubleToLongBits(price);
 		result += (int) (temp >>> 32);
-		result += prime *(selected ? 1231 : 1237);
+		result += prime * (selected ? 1231 : 1237);
 		result += (material == null ? 0 : material.hashCode());
 		result += (color == null ? 0 : color.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public Object clone() {
 		Item item = new Item(price, material, selected, color);
 		return item;
 	}
-	
+
 	@Override
 	public int compareTo(Item secondItem) {
 		return Double.compare(getPrice(), secondItem.getPrice());
 	}
-	
+
 	@Override
 	public String toString() {
-		return ", price: " + price + ", material: " + material.toString().toLowerCase() 
-				+ ", color: " + color.toString().toLowerCase()+ ", selected: " + selected;
+		return ", " + ItemData.PRICE + ": " + price + ", " + ItemData.MATERIAL + ": "
+				+ ItemData.getLocalisedString(material.toString().toLowerCase()) + ", " + ItemData.COLOR + ": "
+				+ ItemData.getLocalisedString(color.toString().toLowerCase()) + ", " + ItemData.SELECTED + ": "
+				+ ItemData.getLocalisedString(String.valueOf(selected));
 	}
 
 }

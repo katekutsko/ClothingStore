@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidShoeSizeException;
 
@@ -72,6 +73,6 @@ public class Shoes extends Item  implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
-		return "size: " + size + super.toString();
+		return ItemData.SIZE + ": " + size + super.toString();
 	}
 }

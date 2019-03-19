@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
@@ -72,7 +73,7 @@ public class Accessory extends Item implements Serializable, Cloneable {
 	
 	@Override 
 	public String toString() {
-		return "season: " + season.toString().toLowerCase() + super.toString();
+		return ItemData.SEASON + ": "+ ItemData.getLocalisedString(season.toString().toLowerCase()) + super.toString();
 	}
 
 }

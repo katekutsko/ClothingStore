@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
@@ -78,6 +79,6 @@ public class Scarf extends Accessory implements Serializable, Cloneable {
 
 	@Override
 	public String toString() {
-		return ("Scarf\n" + super.toString()) + ", type: " + type.toString().toLowerCase();
+		return (ItemData.SCARF + "\n" + super.toString()) + ", " + ItemData.TYPE +  ": " + ItemData.getLocalisedString(type.toString().toLowerCase());
 	}
 }

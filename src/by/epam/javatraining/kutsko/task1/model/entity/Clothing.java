@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
@@ -88,6 +89,6 @@ public class Clothing extends Item implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
-		return (super.toString() + ", size: " + size);
+		return (super.toString() + ", " + ItemData.SIZE + ": " + size);
 	}
 }

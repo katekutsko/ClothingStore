@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
@@ -76,6 +77,6 @@ public class Jumper extends Clothing implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
-		return "Jumper\ntype: " + type.toString().toLowerCase() + super.toString();
+		return ItemData.JUMPER + "\n" + ItemData.TYPE + ": " + ItemData.getLocalisedString(type.toString().toLowerCase()) + super.toString();
 	}
 }

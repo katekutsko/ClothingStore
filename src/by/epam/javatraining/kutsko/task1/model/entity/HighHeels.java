@@ -2,6 +2,7 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidHeelHeightException;
 
@@ -9,12 +10,12 @@ public class HighHeels extends Shoes implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	private float heelHeight;
-	
+
 	public HighHeels() {
 		super();
 		heelHeight = 0;
 	}
-	
+
 	public HighHeels(double price, Material material, boolean selected, Color color, int size, float heelHeight) {
 		super(price, material, selected, color, size);
 		this.heelHeight = heelHeight;
@@ -37,7 +38,6 @@ public class HighHeels extends Shoes implements Serializable, Cloneable {
 		}
 	}
 
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -59,17 +59,17 @@ public class HighHeels extends Shoes implements Serializable, Cloneable {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public Object clone() {
 		Shoes item = (Shoes) super.clone();
-		HighHeels shoes = new HighHeels(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getSize(), heelHeight);
+		HighHeels shoes = new HighHeels(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(),
+				item.getSize(), heelHeight);
 		return shoes;
 	}
-	
-	
+
 	@Override
 	public String toString() {
-		return "HighHeels\n" + super.toString() + ", heel height: " + heelHeight;
+		return ItemData.HIGH_HEELS + "\n" + super.toString() + ", " + ItemData.HEEL_HEIGHT + ": " + heelHeight;
 	}
 }
