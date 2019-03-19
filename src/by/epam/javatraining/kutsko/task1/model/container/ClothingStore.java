@@ -1,5 +1,6 @@
 package by.epam.javatraining.kutsko.task1.model.container;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ import by.epam.javatraining.kutsko.task1.model.exception.WarehouseFullException;
  * @author Екатерина
  *
  */
-public class ClothingStore {
+public class ClothingStore implements Serializable {
 
 	private static final Logger LOGGER;
 
