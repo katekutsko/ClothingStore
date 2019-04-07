@@ -2,10 +2,16 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceException;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "Item", propOrder = { "price", "material", "selected", "color" })
 /**
  * This class is designed as an abstraction for items of a clothing store.
  * 
@@ -13,16 +19,25 @@ import by.epam.javatraining.kutsko.task1.model.exception.InvalidItemPriceExcepti
  * @author Kate Kutsko
  */
 public class Item implements Comparable<Item>, Serializable, Cloneable {
-
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
 
+	@XmlElement(required = true, name = "price")
 	private double price;
 
+	@XmlElement(required = true, name = "material")
 	private Material material;
 
+	@XmlElement(required = true, name = "selected")
 	private boolean selected;
 
+	@XmlElement(required = true, name = "color")
 	private Color color;
+
+	@XmlAttribute(required = true, name = "model")
+	@XmlJavaTypeAdapter(CollapsedStringAdapter.class)
+	@XmlID
+	private String model;
 
 	/**
 	 * Default constructor for class Item
@@ -33,6 +48,7 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		this.material = Material.OTHER;
 		this.selected = false;
 		this.color = Color.MULTI;
+		model = "";
 	}
 
 	/**
@@ -42,12 +58,14 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	 * @param material material the item is made of
 	 * @param selected shows whether the item was selected
 	 * @param color    color of the item
+	 * @param model    model of the item
 	 */
-	public Item(double price, Material material, boolean selected, Color color) {
+	public Item(double price, Material material, boolean selected, Color color, String ID) {
 		this.price = price;
 		this.material = material;
 		this.selected = selected;
 		this.color = color;
+		this.model = ID;
 	}
 
 	/**
@@ -56,13 +74,14 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	 * @param item template for copying
 	 */
 	public Item(Item item) {
-		this();
 		if (item != null) {
 			this.price = item.getPrice();
 			this.material = item.getMaterial();
 			this.selected = item.isSelected();
 			this.color = item.getColor();
+			model = item.model;
 		}
+
 	}
 
 	/**
@@ -77,11 +96,19 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 	 * @param price price to be set
 	 * @throws InvalidItemPriceException is thrown when price is negative
 	 */
-	public void setPrice(double price) throws InvalidItemPriceException {
+	public void setPrice(double price){
 		if (price > 0) {
 			this.price = price;
-		} else {
-			throw new InvalidItemPriceException("Price must not be a negative number");
+		}
+	}
+
+	public String getID() {
+		return model;
+	}
+
+	public void setID(String model) {
+		if (model != null) {
+			this.model = model;
 		}
 	}
 
@@ -164,12 +191,13 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		result += prime * (selected ? 1231 : 1237);
 		result += (material == null ? 0 : material.hashCode());
 		result += (color == null ? 0 : color.hashCode());
+		result += (model == null ? 0 : model.hashCode());
 		return result;
 	}
 
 	@Override
 	public Object clone() {
-		Item item = new Item(price, material, selected, color);
+		Item item = new Item(price, material, selected, color, model);
 		return item;
 	}
 
@@ -183,7 +211,7 @@ public class Item implements Comparable<Item>, Serializable, Cloneable {
 		return ", " + ItemData.PRICE + ": " + price + ", " + ItemData.MATERIAL + ": "
 				+ ItemData.getLocalisedString(material.toString().toLowerCase()) + ", " + ItemData.COLOR + ": "
 				+ ItemData.getLocalisedString(color.toString().toLowerCase()) + ", " + ItemData.SELECTED + ": "
-				+ ItemData.getLocalisedString(String.valueOf(selected));
+				+ ItemData.getLocalisedString(String.valueOf(selected)) + ", " + ItemData.MODEL + ": " + model;
 	}
 
 }

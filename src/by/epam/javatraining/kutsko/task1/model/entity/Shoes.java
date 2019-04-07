@@ -2,44 +2,48 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidShoeSizeException;
 
-public class Shoes extends Item  implements Serializable, Cloneable {
-
+@XmlType(name = "Shoes")
+public class Shoes extends Item implements Serializable, Cloneable {
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	
-	private int size;
-	
+
+	@XmlElement(required = true, name = "shoesize")
+	private int shoeSize;
+
 	public Shoes() {
 		super();
-		size = 37;
+		shoeSize = 37;
 	}
 
-	public Shoes(double price, Material material, boolean selected, Color color, int size) {
-		super(price, material, selected, color);
-		this.size = size;
+	public Shoes(double price, Material material, boolean selected, Color color, String ID, int size) {
+		super(price, material, selected, color, ID);
+		this.shoeSize = size;
 	}
 
 	public Shoes(Shoes item) {
 		super(item);
-		size = item.size;
-	}
-
-	public int getSize() {
-		return size;
-	}
-	
-	public void setSize(int size) throws InvalidShoeSizeException {
-		if (size > 35 && size < 45) {
-			this.size = size;
-		} else {
-			throw new InvalidShoeSizeException("Size " + size + " is not available.");
+		if (item != null) {
+			shoeSize = item.shoeSize;
 		}
 	}
 
-	@Override 
+	public int getSize() {
+		return shoeSize;
+	}
+
+	public void setSize(int size) {
+		if (size > 35 && size < 45) {
+			this.shoeSize = size;
+		}
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -51,28 +55,29 @@ public class Shoes extends Item  implements Serializable, Cloneable {
 			return false;
 		}
 		Shoes other = (Shoes) obj;
-		if (size != other.size) {
+		if (shoeSize != other.shoeSize) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode() + prime * size;
+		int result = super.hashCode() + prime * shoeSize;
 		return result;
 	}
-	
+
 	@Override
 	public Object clone() {
 		Item item = (Item) super.clone();
-		Shoes shoes = new Shoes(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), size);
+		Shoes shoes = new Shoes(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getID(),
+				shoeSize);
 		return shoes;
 	}
-	
+
 	@Override
 	public String toString() {
-		return ItemData.SIZE + ": " + size + super.toString();
+		return ItemData.SIZE + ": " + shoeSize + super.toString();
 	}
 }

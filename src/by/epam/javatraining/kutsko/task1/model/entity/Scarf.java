@@ -2,56 +2,70 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
+@XmlRootElement(name="scarf")
+@XmlType(name="Scarf")
 public class Scarf extends Accessory implements Serializable, Cloneable {
 
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	private Type type;
+	
+	@XmlElement(required = true, name = "scarftype")
+	private Type scarfType;
 
+	@XmlType(name="SType")
+	@XmlEnum(String.class)
 	public enum Type {
-		THIN, CHUNKY, LOOP, OTHER
+		//@XmlEnumValue(value="THIN")
+		THIN, 
+		//@XmlEnumValue(value="CHUNKY")
+		CHUNKY, 
+		//@XmlEnumValue(value="LOOP")
+		LOOP, 
+		//@XmlEnumValue(value="OTHER")
+		OTHER
 	}
 
 	public Scarf() {
 		super();
-		type = Type.OTHER;
+		scarfType = Type.OTHER;
 	}
 
 	public Scarf(Object... parameters) {
 		this((Double) parameters[0], (Material) parameters[1], (Boolean) parameters[2], (Color) parameters[3],
-				(Season) parameters[4], (Type) parameters[5]);
+				(String) parameters[4], (Season) parameters[5], (Type) parameters[6]);
 	}
 
-	public Scarf(double price, Material material, boolean selected, Color color, Season season, Type type) {
-		super(price, material, selected, color, season);
-		this.type = type;
+	public Scarf(double price, Material material, boolean selected, Color color, String ID, Season season, Type type) {
+		super(price, material, selected, color, ID, season);
+		this.scarfType = type;
 	}
 
 	public Scarf(Scarf item) {
 		super(item);
-		this.type = item.type;
+		this.scarfType = item.scarfType;
 	}
 
-	public void setType(Type type) throws CorruptParameterReferenceException {
+	public void setType(Type type){
 		if (type != null) {
-			this.type = type;
-		} else {
-			throw new CorruptParameterReferenceException("Type reference was null");
+			this.scarfType = type;
 		}
 	}
 
 	public Type getType() {
-		return type;
+		return scarfType;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((scarfType == null) ? 0 : scarfType.hashCode());
 		return result;
 	}
 
@@ -64,7 +78,7 @@ public class Scarf extends Accessory implements Serializable, Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		Scarf other = (Scarf) obj;
-		if (type != other.type)
+		if (scarfType != other.scarfType)
 			return false;
 		return true;
 	}
@@ -73,12 +87,12 @@ public class Scarf extends Accessory implements Serializable, Cloneable {
 	public Object clone() {
 		Accessory item = (Accessory) super.clone();
 		Scarf scarf = new Scarf(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(),
-				item.getSeason(), type);
+				item.getSeason(), scarfType);
 		return scarf;
 	}
 
 	@Override
 	public String toString() {
-		return (ItemData.SCARF + "\n" + super.toString()) + ", " + ItemData.TYPE +  ": " + ItemData.getLocalisedString(type.toString().toLowerCase());
+		return "\n" + ItemData.SCARF + "\n" + super.toString() + ", " + ItemData.TYPE +  ": " + ItemData.getLocalisedString(scarfType.toString().toLowerCase());
 	}
 }

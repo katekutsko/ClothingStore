@@ -2,47 +2,54 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.InvalidHeelHeightException;
 
+@XmlRootElement(name="highheels")
+@XmlType(name = "Highheels", propOrder = {
+		"heelheight"
+})
 public class HighHeels extends Shoes implements Serializable, Cloneable {
-
+	
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	private float heelHeight;
+	
+	@XmlElement(required = true, name = "heelheight")
+	private float heelheight;
 
 	public HighHeels() {
 		super();
-		heelHeight = 0;
+		heelheight = 0;
 	}
 
-	public HighHeels(double price, Material material, boolean selected, Color color, int size, float heelHeight) {
-		super(price, material, selected, color, size);
-		this.heelHeight = heelHeight;
+	public HighHeels(double price, Material material, boolean selected, Color color, String ID, int size, float heelHeight) {
+		super(price, material, selected, color, ID, size);
+		this.heelheight = heelHeight;
 	}
 
 	public HighHeels(HighHeels item) {
 		super(item);
-		this.heelHeight = item.heelHeight;
+		this.heelheight = item.heelheight;
 	}
 
 	public float getHeelHeight() {
-		return heelHeight;
+		return heelheight;
 	}
 
-	public void setHeelHeight(float heelHeight) throws InvalidHeelHeightException {
+	public void setHeelHeight(float heelHeight) {
 		if (heelHeight >= 0 && heelHeight <= 20) {
-			this.heelHeight = heelHeight;
-		} else {
-			throw new InvalidHeelHeightException("Heel height must be from 0 to 20 cm");
-		}
+			this.heelheight = heelHeight;
+		} 
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Float.floatToIntBits(heelHeight);
+		result = prime * result + Float.floatToIntBits(heelheight);
 		return result;
 	}
 
@@ -55,7 +62,7 @@ public class HighHeels extends Shoes implements Serializable, Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		HighHeels other = (HighHeels) obj;
-		if (Float.floatToIntBits(heelHeight) != Float.floatToIntBits(other.heelHeight))
+		if (Float.floatToIntBits(heelheight) != Float.floatToIntBits(other.heelheight))
 			return false;
 		return true;
 	}
@@ -63,13 +70,13 @@ public class HighHeels extends Shoes implements Serializable, Cloneable {
 	@Override
 	public Object clone() {
 		Shoes item = (Shoes) super.clone();
-		HighHeels shoes = new HighHeels(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(),
-				item.getSize(), heelHeight);
+		HighHeels shoes = new HighHeels(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getID(),
+				item.getSize(), heelheight);
 		return shoes;
 	}
 
 	@Override
 	public String toString() {
-		return ItemData.HIGH_HEELS + "\n" + super.toString() + ", " + ItemData.HEEL_HEIGHT + ": " + heelHeight;
+		return  "\n" + ItemData.HIGH_HEELS + "\n" + super.toString() + ", " + ItemData.HEEL_HEIGHT + ": " + heelheight;
 	}
 }

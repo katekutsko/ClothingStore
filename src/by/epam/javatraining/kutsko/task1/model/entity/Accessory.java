@@ -2,27 +2,35 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
+@XmlType(name = "Accessory", propOrder = { "season" })
 public class Accessory extends Item implements Serializable, Cloneable {
-
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	
+
+	@XmlElement(required = true, name = "season")
 	private Season season;
-	
+
+	@XmlEnum(String.class)
 	public enum Season {
-		WINTER, DEMI_SEASON, ANY
+		@XmlEnumValue(value = "WINTER")
+		WINTER, @XmlEnumValue(value = "DEMI_SEASON")
+		DEMI_SEASON, @XmlEnumValue(value = "ANY")
+		ANY
 	}
-	
+
 	public Accessory() {
 		super();
 		season = Season.ANY;
 	}
-	
-	public Accessory(double price, Material material, boolean selected, Color color, Season season) {
-		super(price, material, selected, color);
+
+	public Accessory(double price, Material material, boolean selected, Color color, String ID, Season season) {
+		super(price, material, selected, color, ID);
 		this.season = season;
 	}
 
@@ -30,15 +38,13 @@ public class Accessory extends Item implements Serializable, Cloneable {
 		super(item);
 		this.season = item.season;
 	}
-	
-	public void setSeason(Accessory.Season season) throws CorruptParameterReferenceException {
+
+	public void setSeason(Accessory.Season season) {
 		if (season != null) {
 			this.season = season;
-		} else {
-			throw new CorruptParameterReferenceException("Parameter reference was null");
 		}
 	}
-	
+
 	public Accessory.Season getSeason() {
 		return season;
 	}
@@ -63,17 +69,18 @@ public class Accessory extends Item implements Serializable, Cloneable {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public Object clone() {
 		Item item = (Item) super.clone();
-		Accessory accessory = new Accessory(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), season);
+		Accessory accessory = new Accessory(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(),
+				item.getID(), season);
 		return accessory;
 	}
-	
-	@Override 
+
+	@Override
 	public String toString() {
-		return ItemData.SEASON + ": "+ ItemData.getLocalisedString(season.toString().toLowerCase()) + super.toString();
+		return ItemData.SEASON + ": " + ItemData.getLocalisedString(season.toString().toLowerCase()) + super.toString();
 	}
 
 }

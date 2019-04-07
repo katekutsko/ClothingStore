@@ -2,10 +2,14 @@ package by.epam.javatraining.kutsko.task1.model.entity;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.*;
+
 import by.epam.javatraining.kutsko.task1.model.entity.consts.ItemData;
 import by.epam.javatraining.kutsko.task1.model.entity.type.*;
 import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferenceException;
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "Clothing")
 /**
  * This class is an abstraction of clothing items.
  * 
@@ -13,17 +17,26 @@ import by.epam.javatraining.kutsko.task1.model.exception.CorruptParameterReferen
  * @author		Kate Kutsko
  */
 public class Clothing extends Item implements Serializable, Cloneable {
-	
+	@XmlTransient
 	private static final long serialVersionUID = 1L;
-	private Size size;
 	
+	@XmlElement(required = true, name = "clothingsize")
+	private Size clothingSize;
+	
+	@XmlEnum(String.class)
 	public enum Size {
-		XXS, XS, S, M, L, XL, XXL
+		@XmlEnumValue(value = "XXS")XXS, 
+		@XmlEnumValue(value = "XS")XS,
+		@XmlEnumValue(value = "S")S, 
+		@XmlEnumValue(value = "M")M, 
+		@XmlEnumValue(value = "L")L, 
+		@XmlEnumValue(value = "XL")XL, 
+		@XmlEnumValue(value = "XXL")XXL
 	}
 	
 	public Clothing() {
 		super();
-		size = Size.M;
+		clothingSize = Size.M;
 	}
 
 	/**
@@ -32,10 +45,11 @@ public class Clothing extends Item implements Serializable, Cloneable {
 	 * @param selected Shows whether the item was put into shopping basket
 	 * @param color Color of the item
 	 * @param size Size of the clothing item
+	 * @param ID model of the item
 	 */
-	public Clothing(double price, Material material, boolean selected, Color color, Size size) {
-		super(price, material, selected, color);
-		this.size = size;
+	public Clothing(double price, Material material, boolean selected, Color color, String ID, Size size) {
+		super(price, material, selected, color, ID);
+		this.clothingSize = size;
 	}
 
 	/**
@@ -43,26 +57,24 @@ public class Clothing extends Item implements Serializable, Cloneable {
 	 */
 	public Clothing(Clothing item) {
 		super(item);
-		this.size = item.size;
+		this.clothingSize = item.clothingSize;
 	}
 
 	public Size getSize() {
-		return size;
+		return clothingSize;
 	}
 
-	public void setSize(Size size) throws CorruptParameterReferenceException {
+	public void setSize(Size size) {
 		if (size != null) {
-			this.size = size;
-		} else {
-			throw new CorruptParameterReferenceException("Parameter reference was null");
-		}
+			this.clothingSize = size;
+		} 
 	}
 
 
 	@Override
 	public int hashCode() {
 		int result = super.hashCode();
-		result += ((size == null) ? 0 : size.hashCode());
+		result += ((clothingSize == null) ? 0 : clothingSize.hashCode());
 		return result;
 	}
 
@@ -75,7 +87,7 @@ public class Clothing extends Item implements Serializable, Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		Clothing other = (Clothing) obj;
-		if (size != other.size)
+		if (clothingSize != other.clothingSize)
 			return false;
 		return true;
 	}
@@ -83,12 +95,12 @@ public class Clothing extends Item implements Serializable, Cloneable {
 	@Override
 	public Object clone() {
 		Item item = (Item) super.clone();
-		Clothing clothing = new Clothing(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), size);
+		Clothing clothing = new Clothing(item.getPrice(), item.getMaterial(), item.isSelected(), item.getColor(), item.getID(), clothingSize);
 		return clothing;
 	}
 	
 	@Override
 	public String toString() {
-		return (super.toString() + ", " + ItemData.SIZE + ": " + size);
+		return (super.toString() + ", " + ItemData.SIZE + ": " + clothingSize);
 	}
 }
