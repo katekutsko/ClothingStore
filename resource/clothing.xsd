@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://example.com/clothing"
+        xmlns:tns="http://example.com/clothing"
+        elementFormDefault="qualified">
+    <element name="store">
+        <complexType>
+            <sequence>
+                <element name="scarf" type="tns:Scarf" maxOccurs="unbounded"/>
+                <element name="highheels" type="tns:Highheels" maxOccurs="unbounded"/>
+                <element name="jumper" type="tns:Jumper" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="item" type="tns:Item" abstract="true"/>
+    <element name="accessory" type="tns:Accessory" abstract="true" substitutionGroup="tns:item"/>
+    <element name="clothing" type="tns:Clothing" abstract="true" substitutionGroup="tns:item"/>
+    <element name="shoes" type="tns:Shoes" abstract="true" substitutionGroup="tns:item"/>
+    <element name="scarf" type="tns:Scarf" substitutionGroup="tns:accessory"/>
+    <element name="jumper" type="tns:Jumper" substitutionGroup="tns:clothing"/>
+    <element name="highheels" type="tns:Highheels" substitutionGroup="tns:shoes"/>
+
+    <complexType name="Item">
+
+        <sequence>
+            <element name="price">
+                <simpleType>
+                    <restriction base="double">
+                        <minExclusive value="0"/>
+                    </restriction>
+                </simpleType>
+            </element>
+
+            <element name="material" type="tns:Material"/>
+            <element name="selected" type="boolean"/>
+            <element name="color" type="tns:Color"/>
+        </sequence>
+        <attribute name="model" type="tns:Model" use="required"/>
+    </complexType>
+
+    <simpleType name="Material">
+        <restriction base="string">
+            <enumeration value="LEATHER"></enumeration>
+            <enumeration value="SILK"></enumeration>
+            <enumeration value="POLIESTER"></enumeration>
+            <enumeration value="COTTON"></enumeration>
+            <enumeration value="WOOL"></enumeration>
+            <enumeration value="VISCOSE"></enumeration>
+            <enumeration value="OTHER"></enumeration>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Color">
+        <restriction base="string">
+            <enumeration value="BLACK"></enumeration>
+            <enumeration value="WHITE"></enumeration>
+            <enumeration value="GREEN"></enumeration>
+            <enumeration value="GREY"></enumeration>
+            <enumeration value="MULTI"></enumeration>
+            <enumeration value="PINK"></enumeration>
+            <enumeration value="BLUE"></enumeration>
+            <enumeration value="RED"></enumeration>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Model">
+        <restriction base="ID">
+            <pattern value="[a-z]{2}[0-9]{2}-[0-9]{2}"/>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Accessory">
+        <complexContent>
+            <extension base="tns:Item">
+                <sequence>
+                    <element name="season">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="WINTER"></enumeration>
+                                <enumeration value="DEMI_SEASON"></enumeration>
+                                <enumeration value="ANY"></enumeration>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Clothing">
+        <complexContent>
+            <extension base="tns:Item">
+                <sequence>
+                    <element name="clothingsize">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="XXS"></enumeration>
+                                <enumeration value="XS"></enumeration>
+                                <enumeration value="S"></enumeration>
+                                <enumeration value="M"></enumeration>
+                                <enumeration value="L"></enumeration>
+                                <enumeration value="XL"></enumeration>
+                                <enumeration value="XXL"></enumeration>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Shoes">
+        <complexContent>
+            <extension base="tns:Item">
+                <sequence>
+                    <element name="shoesize">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="35"/>
+                                <maxInclusive value="43"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Scarf">
+        <complexContent>
+            <extension base="tns:Accessory">
+                <sequence>
+                    <element name="scarftype" type="tns:SType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <simpleType name="SType">
+        <restriction base="string">
+            <enumeration value="THIN"></enumeration>
+            <enumeration value="CHUNKY"></enumeration>
+            <enumeration value="LOOP"></enumeration>
+            <enumeration value="OTHER"></enumeration>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Jumper">
+        <complexContent>
+            <extension base="tns:Clothing">
+                <sequence>
+                    <element name="jumpertype" type="tns:JType"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <simpleType name="JType">
+        <restriction base="string">
+            <enumeration value="SWEATER"></enumeration>
+            <enumeration value="PULLOVER"></enumeration>
+            <enumeration value="SWEATSHOT"></enumeration>
+            <enumeration value="TUNIC"></enumeration>
+            <enumeration value="HOODY"></enumeration>
+            <enumeration value="OTHER"></enumeration>
+        </restriction>
+    </simpleType>
+
+    <complexType name="Highheels">
+        <complexContent>
+            <extension base="tns:Shoes">
+                <sequence>
+                    <element name="heelheight" >
+                        <simpleType>
+                            <restriction base="float">
+                                <minInclusive value="0"/>
+                                <maxInclusive value="20"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+</schema>
+				

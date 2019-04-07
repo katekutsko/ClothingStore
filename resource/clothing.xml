@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<store xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://example.com/clothing" 
+xsi:schemaLocation="http://example.com/clothing">
+	<scarf model="sc01-03">
+		<price>5.6</price>
+		<material>WOOL</material>
+		<selected>false</selected>
+		<color>RED</color>
+		<season>WINTER</season>
+		<scarftype>CHUNKY</scarftype>
+	</scarf>
+	<scarf model='sc09-54'>
+		<price>6.2</price>
+		<material>SILK</material>
+		<selected>false</selected>
+		<color>WHITE</color>
+		<season>ANY</season>
+		<scarftype>THIN</scarftype>
+	</scarf>
+	<highheels model="hh56-43">
+		<price>20.9</price>
+		<material>LEATHER</material>
+		<selected>false</selected>
+		<color>GREEN</color>
+		<shoesize>38</shoesize>
+		<heelheight>10.5</heelheight>
+	</highheels>
+	<highheels model="hh23-45">
+		<price>38.0</price>
+		<material>POLIESTER</material>
+		<selected>false</selected>
+		<color>PINK</color>
+		<shoesize>40</shoesize>
+		<heelheight>15.5</heelheight>
+	</highheels>
+	<jumper model="jm91-23">
+		<price>20.5</price>
+		<material>COTTON</material>
+		<selected>false</selected>
+		<color>MULTI</color>
+		<clothingsize>L</clothingsize>
+		<jumpertype>SWEATER</jumpertype>
+	</jumper>
+	<jumper model="jm67-87">
+		<price>15.7</price>
+		<material>POLIESTER</material>
+		<selected>false</selected>
+		<color>GREY</color>
+		<clothingsize>M</clothingsize>
+		<jumpertype>HOODY</jumpertype>
+	</jumper>
+</store>
