@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -20,25 +22,43 @@ import by.epam.javatraining.kutsko.task1.model.entity.*;
 import by.epam.javatraining.kutsko.task1.model.entity.Accessory.Season;
 import by.epam.javatraining.kutsko.task1.model.entity.type.Color;
 import by.epam.javatraining.kutsko.task1.model.entity.type.Material;
+import by.epam.javatraining.kutsko.task1.util.configuration.FilePaths;
 import by.epam.javatraining.kutsko.task1.util.xml.handler.ItemEnum;
 import by.epam.javatraining.kutsko.task1.model.container.ClothingStore;
 
 public class ClothingStoreSTAXParser {
+	
+	private static ClothingStoreSTAXParser instance;
+	
 	private Set<Item> items = new HashSet<>();
 	private XMLInputFactory inputFactory;
 	private EnumSet<ItemEnum> itemTypes;
 	
+	private static final Lock LOCK;
 	private static final Logger LOGGER;
-	private static final String LOG_FILE = "resource/log4j.xml";
+	//private static final String LOG_FILE = "resource/log4j.xml";
 
 	static {
+		LOCK = new ReentrantLock();
 		LOGGER = Logger.getRootLogger();
-		DOMConfigurator.configure(LOG_FILE);
+		DOMConfigurator.configure(FilePaths.LOG_CONFIG_FILE);
 	}
 
-	public ClothingStoreSTAXParser() {
+	private ClothingStoreSTAXParser() {
 		inputFactory = XMLInputFactory.newInstance();
 		itemTypes = EnumSet.range(ItemEnum.SCARF, ItemEnum.JUMPER);
+	}
+	
+	public static ClothingStoreSTAXParser getInstance() {
+		if (instance == null) {
+			LOCK.lock();
+			
+			if (instance == null) {
+				instance = new ClothingStoreSTAXParser();
+			}
+			LOCK.unlock();
+		}
+		return instance;
 	}
 
 	public ClothingStore getStore() {
@@ -60,7 +80,7 @@ public class ClothingStoreSTAXParser {
 
 				if (type == XMLStreamConstants.START_ELEMENT) {
 					name = reader.getLocalName();
-
+					
 					if (itemTypes.contains(ItemEnum.valueOf(name.toUpperCase()))) {
 						Item item = buildItem(reader);
 						items.add(item);
@@ -177,7 +197,7 @@ public class ClothingStoreSTAXParser {
 
 		if (reader.hasNext()) {
 			reader.next();
-			text = reader.getText().trim();
+			text = reader.getText();
 		}
 		return text;
 	}

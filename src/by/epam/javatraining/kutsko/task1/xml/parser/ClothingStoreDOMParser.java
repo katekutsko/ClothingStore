@@ -3,6 +3,9 @@ package by.epam.javatraining.kutsko.task1.util.xml.parser;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,19 +26,23 @@ import by.epam.javatraining.kutsko.task1.model.entity.type.Material;
 import by.epam.javatraining.kutsko.task1.util.xml.handler.ItemEnum;
 
 public class ClothingStoreDOMParser {
+	
+	private static ClothingStoreDOMParser instance;
 
 	private Set<Item> items;
 	private DocumentBuilder docBuilder;
 	
+	private static final Lock LOCK;
 	private static final Logger LOGGER;
 	private static final String LOG_FILE = "resource/log4j.xml";
 
 	static {
+		LOCK = new ReentrantLock();
 		LOGGER = Logger.getRootLogger();
 		DOMConfigurator.configure(LOG_FILE);
 	}
 
-	public ClothingStoreDOMParser() {
+	private ClothingStoreDOMParser() {
 
 		items = new HashSet<Item>();
 
@@ -46,6 +53,18 @@ public class ClothingStoreDOMParser {
 		} catch (ParserConfigurationException e) {
 			LOGGER.error("SAX parser configuration error: " + e);
 		}
+	}
+	
+	public static ClothingStoreDOMParser getInstance() {
+		if (instance == null) {
+			LOCK.lock();
+			
+			if (instance == null) {
+				instance = new ClothingStoreDOMParser();
+			}
+			LOCK.unlock();
+		}
+		return instance;
 	}
 
 	public ClothingStore getStore() {

@@ -6,6 +6,8 @@ import by.epam.javatraining.kutsko.task1.util.xml.handler.ClothingStoreHandler;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -15,19 +17,23 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 public class ClothingStoreSAXParser {
 
+	private static ClothingStoreSAXParser instance;
+	
 	private Set<Item> items;
 	private ClothingStoreHandler handler;
 	private XMLReader reader;
 	
+	private static final Lock LOCK;
 	private static final Logger LOGGER;
 	private static final String LOG_FILE = "resource/log4j.xml";
 
 	static {
+		LOCK = new ReentrantLock();
 		LOGGER = Logger.getRootLogger();
 		DOMConfigurator.configure(LOG_FILE);
 	}
 
-	public ClothingStoreSAXParser() {
+	private ClothingStoreSAXParser() {
 
 		handler = new ClothingStoreHandler();
 
@@ -38,6 +44,18 @@ public class ClothingStoreSAXParser {
 		} catch (SAXException e) {
 			LOGGER.error("SAX error: " + e.getMessage());
 		}
+	}
+	
+	public static ClothingStoreSAXParser getInstance() {
+		if (instance == null) {
+			LOCK.lock();
+			
+			if (instance == null) {
+				instance = new ClothingStoreSAXParser();
+			}
+			LOCK.unlock();
+		}
+		return instance;
 	}
 
 	public ClothingStore getStore() {
